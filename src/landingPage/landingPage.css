@@ -5,3 +5,6 @@ flex-direction: row;
 .link{
     flex-direction: row;
 }
+html {
+    height: 100%;
+}

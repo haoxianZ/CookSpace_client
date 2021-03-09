@@ -9,17 +9,17 @@ import Container from 'react-bootstrap/Container'
 
 
 export default function Header(props) {
-
+    console.log(props.profile, props.events)
     return(
         <div>
             <header>
                 <Container>
                 <Row>
                     <Col>
-                        <Navbar.Brand href="#home">Home Page</Navbar.Brand>
+                        <Navbar.Brand href={props.home? props.home:'/' }>Home Page</Navbar.Brand>
                     </Col>
                     <Col>
-                        <Nav.Link className='link' href="/">Profile</Nav.Link>
+                        <Nav.Link className='link' href={props.profile? props.profile:'/' } >Profile</Nav.Link>
                     </Col>
                         <Col>
                         <Nav.Link className='link' href="/search">Search</Nav.Link>
@@ -28,9 +28,11 @@ export default function Header(props) {
                         <Nav.Link className='link' href="/signIn">Sign In</Nav.Link>
                         </Col> 
                     <Col>
-                        <Nav.Link className='link' href="/">Events</Nav.Link>
+                        <Nav.Link className='link' href={props.events? props.events:'/' }>Events</Nav.Link>
                     </Col>
-                    
+                    <Col>
+                        <Nav.Link className='link' href={props.list? props.list:'/' }>Shopping List</Nav.Link>
+                    </Col>
                         
                     
                 </Row>

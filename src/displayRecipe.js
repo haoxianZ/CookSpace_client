@@ -6,10 +6,12 @@ import Header from './header'
 import {Link} from 'react-router-dom'
 
 export default function DisplayRecipe(props){
-  const [recipe, setRecipe]=useState({});
+  const [eventId,setEventId]= useState('');
   const Context = useContext(context);
+  const recipe=Context.recipe
   const apiKey= process.env.REACT_APP_API_KEY;
-  const  user_id  = props.match.params.userId;
+  const  user_id  = props.match.params.userid;
+  console.log(user_id)
 const recipe_id= props.match.params.recipe_id;
   useEffect(()=>{
     async function getRecipe(){
@@ -25,7 +27,39 @@ const recipe_id= props.match.params.recipe_id;
         }
         throw new Error(response.statusText);
       })
-      .then(responseJson => setRecipe(responseJson))
+      .then(responseJson => {
+        Context.handleRecipe(responseJson)
+        return responseJson
+        })
+      .then(responseJson=>{
+        if(user_id&& responseJson){
+          console.log(user_id,responseJson)
+          const newEvent = {
+            event_recipe_id:responseJson,
+            host_id: user_id,
+            event_date:""
+          }
+          console.log(newEvent)
+          fetch(`${config.SERVER_ENDPOINT}/events`, {
+            method: 'POST',
+            headers: {
+              'content-type': 'application/json'
+            },
+            body:JSON.stringify(newEvent)
+          }).then(response => {
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error(response.statusText);
+          })
+          .then(responseJson => {
+            console.log(responseJson)
+            setEventId(responseJson.id)})
+          .catch(error => {
+              console.error({ error })
+            });
+        }
+      })
       .catch(error => {
           console.error({ error })
         });
@@ -33,18 +67,20 @@ const recipe_id= props.match.params.recipe_id;
     getRecipe()
     
   },[])
+  
     let renderRecipes;
     let renderIngredients;
     let renderInstructions;
+    let ingredients;
     console.log(recipe)
     let cookingTime
-    if(recipe.length===0){
+    if(!recipe){
       renderRecipes = null
         
     }
     else {
       cookingTime=recipe.readyInMinutes
-      const ingredients = recipe.extendedIngredients;
+      ingredients = recipe.extendedIngredients;
       if(recipe.instructions){ 
       const instructions = recipe.analyzedInstructions[0].steps;
       renderInstructions=  instructions.map((step,index)=>{
@@ -72,36 +108,54 @@ const recipe_id= props.match.params.recipe_id;
             
         </div>
     } 
+    const newBookmark={
+      user_id: user_id,
+      api_recipe: recipe
+    }
+    const Bookmark=()=>{
+      fetch(`${config.SERVER_ENDPOINT}/users/${user_id}/bookmarks`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body:JSON.stringify(newBookmark)
+      })
+    .then(response => {
+      if (response.ok) {
+        alert('is bookmarked')
+        return response.json();
+      }
+      throw new Error(response.statusText);
+    }).catch(error => {
+      console.error({ error })
+    });
+    }
 
-    let mybutton = document.getElementById("myBtn");
+    const addToShoppingList=()=>{
+      ingredients.forEach(ingredient => {
+        
+              fetch(`${config.SERVER_ENDPOINT}/users/${user_id}/ingredients`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body:JSON.stringify({ingredient})
+      }).then(alert('they are added!'))
+      });
 
-// When the user scrolls down 20px from the top of the document, show the button
-window.onscroll = function() {scrollFunction()};
-
-const  scrollFunction=()=> {
-  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-    mybutton.style.display = "block";
-  } else {
-    mybutton.style.display = "none";
-  }
-}
-
-// When the user clicks on the button, scroll to the top of the document
-function topFunction() {
-  document.body.scrollTop = 0; // For Safari
-  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-}
+    }
     return ( 
         <div className='recipes'>
-          <Header/>
+          <Header home={`/users/${user_id}`} profile={`/users/${user_id}/profile`} events={`/users/${user_id}/events`} list={`/users/${user_id}/list`} />
         <div className='container'>
           {renderRecipes}
+          <button onClick={Bookmark} >Bookmark this recipe</button>
           <h5>Cooking Time: {cookingTime}</h5>
-          <Link to={`/users/${user_id}/${recipe_id}/createEvent`} >Create Event</Link>
-          <h4>Ingredients:</h4>
+          <Link to={`/users/${user_id}/${recipe_id}/createEvent/${eventId}`} >Create Event</Link>
+          <h4>Ingredients:</h4> <button onClick={addToShoppingList} >Add Ingredients to Shopping List</button>
           <br/>
-  
           <ul>
+            
             {renderIngredients}
           </ul>
           <h4>Instructions</h4>
@@ -111,7 +165,6 @@ function topFunction() {
         </div>
         
         
-        <button onClick={topFunction} id="myBtn" title="Go to top">Top</button>
 
         </div>
     )

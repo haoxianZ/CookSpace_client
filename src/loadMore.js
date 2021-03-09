@@ -5,7 +5,7 @@ export default function LoadMore(props){
     const renderMore=recipes.slice(6,props.click*6+6).map((item,index)=>(
             <div key={index} className='subContainer'>
                 <h4>{item.recipe.label}</h4>
-                <img src={item.recipe.image}/>
+                <img src={item.recipe.image} alt=''/>
                 <ul>
                      {item.recipe.ingredients.map((ingre,i)=>(
                     <li key={i}>{ingre.text}</li>

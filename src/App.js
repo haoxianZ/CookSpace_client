@@ -6,7 +6,7 @@ import LandingPage from './landingPage/landingPage'
 import SignInSide from './signIn'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SignUp from './signUp'
-import ShoppingList from './shoppingList'
+import ShoppingList from './shoppingList/shoppingList'
 import MyTimer from './timer'
 import VoiceControl from './voiceCommand'
 import config from './config';
@@ -15,10 +15,16 @@ import SearchRecipe from './searchRecipe'
 import UserPage from './userPage'
 import DisplayRecipe from './displayRecipe'
 import CreateEvent from './createEvent'
+import Profile from './profile'
+import Events from './events'
+import DisplayRecipeOfTheDay from './displayRecipeOfTheDay'
+import CreateEventNoRecipe from './createEventNoRecipe'
 function App() {
   const [Login,setLogin]=useState(null);
   const [user, setUser]=useState({})
   const [recipes, setRecipes]=useState([])
+  const [friends, setUserFriends]=useState([])
+  const [recipe, setRecipe]=useState(null);
 
   const [ingredients, setIngredients]=useState([]);
   const time = new Date();
@@ -53,16 +59,26 @@ function App() {
       setUser(user)
       setLogin(user)
     }
+    const loginUserFriends=(arrayOfFriend)=>{
+      setUserFriends(arrayOfFriend)
+    }
     const addRecipe=(recipes)=>{
       setRecipes(recipes)
     }
+    const handleRecipe=(recipe)=>{
+      setRecipe(recipe)
+    }
    const contextValue = {
     randomRecipe,
+    recipe,
     user,
+    friends,
     ingredients,
     recipes,
+    handleRecipe,
     handleAddIngredient,
     loginUser,
+    loginUserFriends,
     spoonApi,
     addRecipe
   }
@@ -71,15 +87,23 @@ function App() {
 
     <div className="App">
       <Switch>
-        <Route path="/videoCall" component={VideoCall} />
-        <Route path="/signIn" component={SignInSide} />
-        <Route path="/signUp" component={SignUp} />
-        <Route path="/users/:userid/list" component={ShoppingList} />
-        <Route path="/users/:userid/:recipe_id" component={DisplayRecipe} />
+        <Route exact path="/signIn" component={SignInSide} />
+        <Route exact path="/signUp" component={SignUp} />
+        <Route exact path="/users/:userid/list" component={ShoppingList} />
+       
         <Route exact path="/users/:userid" component={UserPage} />
-        <Route exact Path="users/:userid/:recipe_id/createEvent" component={CreateEvent} />
-        <Route path="/voice" component={VoiceControl} />
-        <Route path="/search" component={SearchRecipe} />
+        <Route exact path="/users/:userid/videoCall/:event_id" component={VideoCall} />
+        <Route exact path="/users/:userid/events" component={Events} />
+        <Route exact path="/users/:userid/profile" component={Profile} />
+        <Route exact path="/users/:userid/list" component={ShoppingList} />
+        <Route exact path="/users/:userid/:recipe_id" component={DisplayRecipe} />
+        <Route exact path="/recipeOfTheDay/:recipe_id" component={DisplayRecipeOfTheDay} />
+        
+        <Route exact path="/users/:userid/:recipe_id/createEvent/:eventId" component={CreateEvent} />
+        <Route exact path="/users/:userid/createEvent/:eventId" component={CreateEventNoRecipe} />
+
+        <Route  exact path="/voice" component={VoiceControl} />
+        <Route exact path="/search" component={SearchRecipe} />
 
         <Route exact path="/" component={LandingPage} />
 

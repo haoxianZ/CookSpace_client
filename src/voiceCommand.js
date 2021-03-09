@@ -21,7 +21,8 @@ export default function VoiceControl(){
       },
       {
         command: ['Hello', 'Hi'],
-        callback: ({ command }) => setMessage(`Hi there! You said: "${command}"`),
+        callback: ({ command }) => {setMessage(`Hi there! You said: "${command}"`)
+      console.log(command)},
         matchInterim: true
       },
       {
@@ -44,7 +45,7 @@ export default function VoiceControl(){
       }
     ]
   
-    const { transcript } = useSpeechRecognition({ commands })
+    const { transcript, resetTranscript } = useSpeechRecognition({commands})
   
     if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
       return null
@@ -53,7 +54,9 @@ export default function VoiceControl(){
 
     return (
       <div>
+        <h4> this is the command recorded</h4>
         <p>{message}</p>
+        <h4>rubbish</h4>
         <p>{transcript}</p>
       </div>
     )

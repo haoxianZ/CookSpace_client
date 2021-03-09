@@ -7,15 +7,13 @@ import DateTimePicker from '@material-ui/lab/DateTimePicker';
 import Header from './header';
 import config from './config'
 import { useHistory } from 'react-router-dom';
-export default function CreateEvent(props){
+export default function CreateEventNoRecipe(props){
     const history= useHistory()
     const [eventDate, setValue] = useState(new Date());
     const Context = useContext(context)
     const  user_id  = props.match.params.userid;
-    const recipe_id= props.match.params.recipe_id;
     const event_id=props.match.params.eventId;
-    console.log(user_id,recipe_id)
-    console.log(user_id,recipe_id)
+    console.log(user_id)
     const friendsList = Context.friends;
     const displayFriends = friendsList.map((friend,key)=>{
         return (

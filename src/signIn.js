@@ -15,7 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import config from './config';
 import {useHistory} from 'react-router-dom';
 import context from './context'
-
+import Header from './header'
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -57,16 +57,23 @@ export default function SignInSide() {
         .then(user => {
           Context.loginUser(user);
           history.push(`/users/${user.id}`);
+          return user
         })
-        .catch(error => { 
-          alert(error.error.message)
-          console.error({ error })
+        .then(user=>{
+          fetch(`${config.SERVER_ENDPOINT}/users/${user.id}/friends`, {
+            method: 'GET'
+          }).then(friends=>{
+            return friends.json()
+          }).then(friends=>{
+            Context.loginUserFriends(friends)
+            console.log(friends)
+          })
         })
   }
   return (
     <Grid container component="main" >
 
-
+      <Header/>
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div >
           <Typography component="h1" variant="h5">
