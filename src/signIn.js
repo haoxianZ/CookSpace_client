@@ -15,7 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import config from './config';
 import {useHistory} from 'react-router-dom';
 import context from './context'
-import Header from './header'
+import VisitorHeader from './visitorHeader/visitorHeader'
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -73,7 +73,7 @@ export default function SignInSide() {
   return (
     <Grid container component="main" >
 
-      <Header/>
+      <VisitorHeader/>
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div >
           <Typography component="h1" variant="h5">

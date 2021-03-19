@@ -7,7 +7,6 @@ import Col from 'react-bootstrap/Col'
 import Container from 'react-bootstrap/Container'
 import SignInSide from '../signIn'
 import context from '../context';
-import Header from '../header'
 import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -18,7 +17,8 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import Button from '@material-ui/core/Button';
-
+import VisitorHeader from '../visitorHeader/visitorHeader';
+import SearchRecipe from '../searchRecipe/searchRecipe';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -85,7 +85,7 @@ export default function LandingPage(params) {
     }
         return(
         <div>
-            <Header/>
+            <VisitorHeader/>
             <h3>Weclome to Cook Space!</h3>
            
             <div className={classes.root}>

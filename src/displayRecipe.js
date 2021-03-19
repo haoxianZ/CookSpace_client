@@ -3,11 +3,12 @@ import context from './context';
 import config from './config';
 import LoadMore from './loadMore';
 import Header from './header'
-import {Link} from 'react-router-dom'
+import {Link, useHistory} from 'react-router-dom'
 
 export default function DisplayRecipe(props){
   const [eventId,setEventId]= useState('');
   const Context = useContext(context);
+  const history=useHistory()
   const recipe=Context.recipe
   const apiKey= process.env.REACT_APP_API_KEY;
   const  user_id  = props.match.params.userid;
@@ -37,7 +38,8 @@ const recipe_id= props.match.params.recipe_id;
           const newEvent = {
             event_recipe_id:responseJson,
             host_id: user_id,
-            event_date:""
+            event_date:"",
+            event_name:responseJson.title
           }
           console.log(newEvent)
           fetch(`${config.SERVER_ENDPOINT}/events`, {
@@ -140,8 +142,17 @@ const recipe_id= props.match.params.recipe_id;
           'content-type': 'application/json'
         },
         body:JSON.stringify({ingredient})
-      }).then(alert('they are added!'))
+      }).then(res => {
+        if (!res.ok) return res.json().then(e => Promise.reject(e))
+        return res.json()
+      })
+      .catch(error => {
+        console.error({ error })
+      })
+      
+      
       });
+      alert('They are added to your Shopping List')
 
     }
     return ( 

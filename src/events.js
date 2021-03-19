@@ -15,7 +15,6 @@ export default function Events(props){
         console.log(jsonEvents)
         }
         fetchData()
-        
       },[])
     let displayEvents='There is no upcoming event'
     if(events!==[]){
@@ -24,7 +23,8 @@ export default function Events(props){
             let date = new Date(event.event_date)
             console.log(date
                 )
-        return (<div key={index}> 
+        return (<div key={index}>
+            <h5>{event.event_name}</h5> 
             <h6>{event.event_recipe_id.title}</h6>
             <p>Time: {date.toLocaleString()}</p>
             <Link to={`/users/${user_id}/videoCall/${event.id}`}  >

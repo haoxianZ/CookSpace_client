@@ -11,7 +11,7 @@ import MyTimer from './timer'
 import VoiceControl from './voiceCommand'
 import config from './config';
 import context from './context';
-import SearchRecipe from './searchRecipe'
+import SearchRecipe from './searchRecipe/searchRecipe'
 import UserPage from './userPage'
 import DisplayRecipe from './displayRecipe'
 import CreateEvent from './createEvent'
@@ -54,6 +54,13 @@ function App() {
       ]
     )
   }
+  const handleDeleteIngredient=(id)=>{
+    id = parseInt(id);
+   const newArray = ingredients.filter(ingredient=>ingredient.ingredient_id!==id)
+    setIngredients(
+      newArray
+    )
+  }
   console.log(ingredients)
   const loginUser=(user)=>{
       setUser(user)
@@ -77,6 +84,7 @@ function App() {
     recipes,
     handleRecipe,
     handleAddIngredient,
+    handleDeleteIngredient,
     loginUser,
     loginUserFriends,
     spoonApi,

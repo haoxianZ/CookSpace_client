@@ -21,6 +21,7 @@
     "react-jutsu": "^3.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
+    "react-search-box": "^2.0.2",
     "react-speech-recognition": "^3.6.0",
     "react-swipeable-views": "^0.13.9",
     "react-timer-hook": "^2.0.7",

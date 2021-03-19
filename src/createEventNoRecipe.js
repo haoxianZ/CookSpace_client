@@ -7,6 +7,7 @@ import DateTimePicker from '@material-ui/lab/DateTimePicker';
 import Header from './header';
 import config from './config'
 import { useHistory } from 'react-router-dom';
+import SelectRecipeForEvent from './selectRecipeForEvent';
 export default function CreateEventNoRecipe(props){
     const history= useHistory()
     const [eventDate, setValue] = useState(new Date());
@@ -32,31 +33,31 @@ export default function CreateEventNoRecipe(props){
            event_date: eventDate
     }
     const handleSave=(e)=>{
-        fetch(`${config.SERVER_ENDPOINT}/events/${event_id}`, {
-            method: 'PATCH',
-            headers: {
-              'content-type': 'application/json'
-            },
-            body: JSON.stringify(event)
-          })
-            .then(res => {
-              if (!res.ok){
-                return res.json().then(e => Promise.reject(e))
-              }
-              return res.json()
-            })
-            .then(event => {
-              history.push(`/users/${event.host_id}`);
-              return event
-            })
+
+        // fetch(`${config.SERVER_ENDPOINT}/events/${event_id}`, {
+        //     method: 'PATCH',
+        //     headers: {
+        //       'content-type': 'application/json'
+        //     },
+        //     body: JSON.stringify(event)
+        //   })
+        //     .then(res => {
+        //       if (!res.ok){
+        //         return res.json().then(e => Promise.reject(e))
+        //       }
+        //       return res.json()
+        //     })
+        //     .then(event => {
+        //       history.push(`/users/${event.host_id}`);
+        //       return event
+        //     })
     }
     return(
         <div className="createEvent">
             <Header/>
-            <button onClick={handleSave}>Save</button>
-            <h4>{recipe.title}</h4>
-            <img src={recipe.image} alt={recipe.title} />
+            <SelectRecipeForEvent/>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <br/>
       <DateTimePicker
         renderInput={(props) => <TextField {...props} />}
         label="DateTimePicker"

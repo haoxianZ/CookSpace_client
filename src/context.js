@@ -11,6 +11,7 @@ const context= React.createContext({
   randomRecipe:{},
   spoonApi:'',
   handleAddIngredient:()=>{},
+  handleDeleteIngredient:()=>{},
   addUser: () => {},
   addRecipe: ()=>{},
   deleteRecipe: ()=>{},

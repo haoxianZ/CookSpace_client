@@ -70,7 +70,7 @@ useEffect(()=>{
       />
       {/* let user click to start voice command */}
       <button>Start</button>
-      <VoiceControl/>
+      <VoiceControl event={event}/>
       <div>
         
       </div>

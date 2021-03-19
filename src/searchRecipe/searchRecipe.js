@@ -5,10 +5,16 @@ import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import Input from '@material-ui/core/Input';
 import AccessTime from '@material-ui/icons/AccessTime';
-import config from './config';
-import context from './context';
+import config from '../config';
+import context from '../context';
 import {useHistory, Link} from 'react-router-dom';
-
+import './searchRecipe.css';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuIcon from '@material-ui/icons/Menu';
+import SearchIcon from '@material-ui/icons/Search';
 const useStyles = makeStyles({
     root: {
       width: 250,
@@ -24,7 +30,16 @@ export default function SearchRecipe(props){
     const classes = useStyles();
     const [cookTime, setCookTime] = useState(30);
     const  user_id  = props.user_id;
+    const [anchorEl, setAnchorEl] = useState(null);
 
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+  
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
+  
 
     const handleSliderChange = (event, newValue) => {
       setCookTime(newValue);
@@ -46,8 +61,10 @@ export default function SearchRecipe(props){
         const searchWord = document.getElementById("keyWord").value;
         const includeIngredients= document.getElementById("includeIngredient").value;
         const excludeIngredients = document.getElementById("excludeIngredient").value;
+        const cuisine = document.getElementById("cuisine").value;
+
         console.log(Context.spoonApi)
-        fetch(`${config.API_ENDPOINT}recipes/complexSearch?query=${searchWord}&includeIngredients=${includeIngredients}&maxReadyTime=${cookTime}&excludeIngredients=${excludeIngredients}&apiKey=${Context.spoonApi}`, {
+        fetch(`${config.API_ENDPOINT}recipes/complexSearch?query=${searchWord}&includeIngredients=${includeIngredients}&maxReadyTime=${cookTime}&excludeIngredients=${excludeIngredients}&cuisine=${cuisine}&apiKey=${Context.spoonApi}`, {
             method: 'GET',
             headers: {
               'content-type': 'application/json'
@@ -66,7 +83,6 @@ export default function SearchRecipe(props){
 
     }
     const results=Context.recipes;
-    console.log(results)
     let display;
     if(!results){
       display = null
@@ -87,42 +103,62 @@ export default function SearchRecipe(props){
 
     })
     console.log(display)
-    // window.onload=function(){
-    //   let mybutton = document.getElementById("myBtn");
+    window.onload=function(){
+      let mybutton = document.getElementById("myBtn");
 
-    // // When the user scrolls down 20px from the top of the document, show the button
-    // window.onscroll = function() {scrollFunction()};
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function() {scrollFunction()};
     
-    // const  scrollFunction=()=> {
-    //   if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-    //     mybutton.style.display = "block";
-    //   } else {
-    //     mybutton.style.display = "none";
-    //   }
-    // }
-    // }
+    const  scrollFunction=()=> {
+      console.log('scrolling running')
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+    }
     
     
-    // // When the user clicks on the button, scroll to the top of the document
-    // function topFunction() {
-    //   document.body.scrollTop = 0; // For Safari
-    //   document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-    // }
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+      document.body.scrollTop = 0; // For Safari
+      document.documentElement.scrollTo({top:0,behavior: 'smooth'}); // For Chrome, Firefox, IE and Opera
+    }
     return(
         <div>
             <form onSubmit={handleSubmit}>
-               <label for="keyWord">Find Recipes</label>
-               <input type="text" id="keyWord" name="keyWord" placeholder="Search">
+               <input type="text" id="keyWord" name="keyWord" placeholder="Search for Recipes">
                </input>
-               <label for="includeIngredient">Must Include: </label>
+               <button type='submit' className='submitBtn'><SearchIcon/> </button>
+
+               <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                <FilterListIcon/>
+                </Button>
+              
+
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        
+         <label htmlFor="includeIngredient">Must Include: </label>
                <input type="text" id="includeIngredient" name="includeIngredient" placeholder="Peanut">
                </input>
-               <br/>
-               <label for="excludeIngredient">Do Not Include</label>
+        <br/>
+        <label htmlFor="excludeIngredient">Do Not Include</label>
                <input type="text" id="excludeIngredient" name="excludeIngredient" placeholder="Peanut">
                </input>
+
                <br/>
-                <div className={classes.root} id="cookTimeFilter">
+          <label htmlFor="cuisine">Cuisine Type</label>
+               <input type="text" id="cuisine" name="cuisine" placeholder="Italian">
+               </input>
+               <br/>
+                        <div className={classes.root} id="cookTimeFilter">
                 <Typography id="input-slider" gutterBottom>
                     Cooking Time
                 </Typography>
@@ -147,7 +183,7 @@ export default function SearchRecipe(props){
                         onChange={handleInputChange}
                         onBlur={handleBlur}
                         inputProps={{
-                        step: 10,
+                        step: 1,
                         min: 0,
                         max: 180,
                         type: 'number',
@@ -156,12 +192,18 @@ export default function SearchRecipe(props){
                     /> mins
                     </Grid>
                 </Grid>
-                </div>
-                <button type='submit' className='submitBtn'>Search</button>
+              </div>
+                
+      </Menu>
+    
+               
+               
+               
+            
 
             </form>
             {display}
-            {/* <button onClick={topFunction} id="myBtn" title="Go to top">Top</button> */}
+            <button onClick={topFunction} id="myBtn" title="Go to top">Top</button>
 
         </div>
     )
