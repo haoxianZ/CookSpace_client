@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import {Route, Switch} from 'react-router-dom'
 import {Jutsu} from 'react-jutsu'
-import VideoCall from './videoCall'
+import VideoCall from './videoCall/videoCall'
 import LandingPage from './landingPage/landingPage'
 import SignInSide from './signIn'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -19,6 +19,7 @@ import Profile from './profile'
 import Events from './events'
 import DisplayRecipeOfTheDay from './displayRecipeOfTheDay'
 import CreateEventNoRecipe from './createEventNoRecipe'
+import Review from './review'
 function App() {
   const [Login,setLogin]=useState(null);
   const [user, setUser]=useState({})
@@ -101,6 +102,8 @@ function App() {
        
         <Route exact path="/users/:userid" component={UserPage} />
         <Route exact path="/users/:userid/videoCall/:event_id" component={VideoCall} />
+        <Route exact path="/users/:userid/review/:recipe_id" component={Review} />
+
         <Route exact path="/users/:userid/events" component={Events} />
         <Route exact path="/users/:userid/profile" component={Profile} />
         <Route exact path="/users/:userid/list" component={ShoppingList} />

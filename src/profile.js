@@ -10,6 +10,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
   
@@ -67,12 +68,33 @@ export default function Profile(props){
 
     
     const  user_id  = props.match.params.userid;
+    const deleteFriend=(e)=>{
+      fetch(`${config.SERVER_ENDPOINT}/users/${user_id}/friends/${e.target.value}`, {
+        method: 'DELETE',
+        headers: {
+          'content-type': 'application/json'
+        }
+      })
+        .then(res => {
+          if (!res.ok)
+            return res.json().then(e => Promise.reject(e))
+        })
+        .then(() => {
+          const newList = friends.filter(friend=>friend.friend_id!==parseInt(e.target.value) )
+          setUserFriends(newList)
+          console.log(friends,e.target.value)
+          alert('Friend has been deleted')
+          })
+        .catch(error => {
+          console.error({ error })
+        })
+    }
     const displayFriends = friends.map((friend,key)=>{
         return (
             <li key={key}>
                 {friend.email}
                 {friend.username}
-                <button  >remove</button>
+                <button onClick={deleteFriend} value={friend.friend_id}>remove</button>
             </li>
         )
     })
@@ -131,19 +153,48 @@ export default function Profile(props){
      })
     const AddFriend=(e)=>{
         e.preventDefault();
+        const friend = {
+          user_id:user_id,
+          username: e.target.value
+        }
+        fetch(`${config.SERVER_ENDPOINT}/users/${user_id}/friends`, {
+          method: 'Post',
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify(friend)
+        })
+          .then(res => {
+            if (!res.ok){
+              return res.json().then(e => Promise.reject(e))
+            }
+            return res.json()
+          })
+          .then(friends => {
+            console.log( friends)
+            setUserFriends(friends)
+            alert(`friend has been added. `)
+          })
 
     }
+    const friendsName= friends.map((friend)=>{
+      return friend.username
+    })
+    console.log(friendsName, 'testing')
+
     const dispalyMatchingUsers = matchingUsers.map((user,index)=>{
+
             if(user!==''){
                 return(
                     <li key={index}>
                         {user.username}
-                        <button>Add </button>
+                        {friendsName.includes(user.username)?
+                        <button onClick={AddFriend} value={user.username} disabled>Add </button>:
+                        <button onClick={AddFriend} value={user.username}>Add </button>}
                     </li>
                 )
             }
         })
-        console.log(dispalyMatchingUsers)
     const showMatchingUser=(e)=>{
         const matchingTempUsers=allUsers.map(user=>{
             if(user.username.includes(e.target.value)){
@@ -153,7 +204,6 @@ export default function Profile(props){
         })
         setMatchingUsers(matchingTempUsers)
 
-        console.log(matchingUsers)
         
     }
     return(
@@ -179,12 +229,11 @@ export default function Profile(props){
       <TabPanel value={value} index={0}>
       <h5>My friends</h5>
 
-<form onSubmit={AddFriend} >
-<label for="friendName">Add Friend: </label>
+
+<label htmlFor="friendName">Add Friend: </label>
    <input type="text" id="friendName" name="friendName" placeholder="username" onChange={showMatchingUser}>
    </input>
-   <button type='submit' className='submitBtn'>Search</button>
-</form>
+
 <ul>
     {dispalyMatchingUsers}
 

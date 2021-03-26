@@ -15,6 +15,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import TuneIcon from '@material-ui/icons/Tune';
 const useStyles = makeStyles({
     root: {
       width: 250,
@@ -28,7 +29,7 @@ export default function SearchRecipe(props){
     const Context = useContext(context);
     const history = useHistory();
     const classes = useStyles();
-    const [cookTime, setCookTime] = useState(30);
+    const [cookTime, setCookTime] = useState(10000);
     const  user_id  = props.user_id;
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -38,6 +39,7 @@ export default function SearchRecipe(props){
   
     const handleClose = () => {
       setAnchorEl(null);
+      alert('Search again with your filters!')
     };
   
 
@@ -52,8 +54,8 @@ export default function SearchRecipe(props){
     const handleBlur = () => {
       if (cookTime < 0) {
         setCookTime(0);
-      } else if (cookTime > 180) {
-        setCookTime(180);
+      } else if (cookTime > 10000) {
+        setCookTime(10000);
       }
     };
     const handleSubmit=(e)=>{
@@ -96,6 +98,7 @@ export default function SearchRecipe(props){
                 <img src={recipe.image}
                             // onError={(e)=>{e.target.src='/404.jpg'}}
                             />
+                {/* add review here and once click in show comments */}
 
            </Link>
 
@@ -127,14 +130,15 @@ export default function SearchRecipe(props){
     }
     return(
         <div>
-            <form onSubmit={handleSubmit}>
+            <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                <TuneIcon/>
+                </Button>
+                <form onSubmit={handleSubmit}>
                <input type="text" id="keyWord" name="keyWord" placeholder="Search for Recipes">
                </input>
                <button type='submit' className='submitBtn'><SearchIcon/> </button>
 
-               <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-                <FilterListIcon/>
-                </Button>
+               
               
 
       <Menu
@@ -172,7 +176,7 @@ export default function SearchRecipe(props){
                         onChange={handleSliderChange}
                         aria-labelledby="input-slider"
                         min={0}
-                        max={180}
+                        max={300}
                     />
                     </Grid>
                     <Grid item>
@@ -185,15 +189,17 @@ export default function SearchRecipe(props){
                         inputProps={{
                         step: 1,
                         min: 0,
-                        max: 180,
+                        max: 1000,
                         type: 'number',
                         'aria-labelledby': 'input-slider',
                         }}
                     /> mins
                     </Grid>
                 </Grid>
-              </div>
                 
+
+              </div>
+                <button type='submit' className='submitBtn' onClick={handleClose}>Apply Filter</button>
       </Menu>
     
                

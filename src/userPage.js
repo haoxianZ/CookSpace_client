@@ -2,22 +2,53 @@ import React, {useContext, useState, useEffect} from 'react';
 import Header from './header';
 import context from './context';
 import SearchRecipe from './searchRecipe/searchRecipe';
-import config from './config'
+import config from './config';
+import {Link} from 'react-router-dom'
 export default function UserPage(props){
-    const { randomRecipe} = useContext(context);
     const [user, setUser] = useState({})
+    const [popularRecipes, setPopularRecipes]= useState([])
+    const [randomRecipe, setRandomRecipe]= useState({});
 
     console.log(randomRecipe)
     const  user_id  = props.match.params.userid;
     useEffect(()=>{
         async function fetchData(){
+          const recipe = await fetch(`${config.SERVER_ENDPOINT}/recipes/recipeOfTheDay`);
+          const jsonRecipe = await recipe.json();
+
           const savedUser = await fetch(`${config.SERVER_ENDPOINT}/users/${user_id}`);
           const jsonUser = await savedUser.json();
+          const popularRecipes = await fetch(`${config.SERVER_ENDPOINT}/recipes/popularRecipes`);
+          const jsonRecipes = await popularRecipes.json();
+          setPopularRecipes(jsonRecipes)
           setUser(jsonUser)
+          setRandomRecipe(jsonRecipe)
+          console.log(jsonRecipe)
         }
         fetchData()
         
       },[])
+
+
+    const renderPopular=popularRecipes.map((recipe,index)=>{
+        return (<div key={index}>
+          <Link to={`/users/${user_id}/${recipe.recipe.id}`} >
+            <h6>{recipe.recipe.title}</h6>
+            <img src={recipe.recipe.image}></img>
+          </Link>
+          
+
+        </div>)
+      })
+    let recipeOfTheDay;
+    if(randomRecipe.recipes){
+      recipeOfTheDay= <Link to={`/users/${user_id}/${randomRecipe.recipes.recipes[0].id}`}>
+      <h6>{randomRecipe.recipes.recipes[0].title}</h6>
+      <img src={randomRecipe.recipes.recipes[0].image} alt="image of food" />
+      </Link>
+                  
+    }  
+     
     return(
         <div>
             <Header home={`/users/${user_id}`} profile={`/users/${user_id}/profile`} events={`/users/${user_id}/events`} list={`/users/${user_id}/list`} />
@@ -26,12 +57,11 @@ export default function UserPage(props){
             <h4>Welcome back {user.username}!</h4>
 
             <h5>What's cookin?</h5>
-            <h6>Recipe of the day</h6><br/>
-            <h6>{randomRecipe.recipes? randomRecipe.recipes.recipes[0].title:null}</h6>
-            <img src={randomRecipe.recipes? randomRecipe.recipes.recipes[0].image:null} alt="image of food" />
-            
+            <h5>Recipe of the day</h5>
+            {recipeOfTheDay}
+            <br/>
             <h6>Popular</h6>
-
+            {renderPopular}
         </div>
     )
 }

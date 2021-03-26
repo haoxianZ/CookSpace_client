@@ -56,6 +56,7 @@ export default function CreateEvent(props){
               return res.json()
             })
             .then(event => {
+              alert('Your event has been created')
               history.push(`/users/${event.host_id}`);
               return event
             })

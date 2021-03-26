@@ -37,7 +37,8 @@ export default function Events(props){
     const newEvent = {
         event_recipe_id:{},
         host_id: user_id,
-        event_date:""
+        event_date:"",
+        event_name:''
       }
     const createNewEvent = ()=>{fetch(`${config.SERVER_ENDPOINT}/events`, {
         method: 'POST',

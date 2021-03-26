@@ -19,6 +19,7 @@ import FacebookIcon from '@material-ui/icons/Facebook';
 import Button from '@material-ui/core/Button';
 import VisitorHeader from '../visitorHeader/visitorHeader';
 import SearchRecipe from '../searchRecipe/searchRecipe';
+import config from '../config';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -58,11 +59,20 @@ const useStyles = makeStyles((theme) => ({
     width: 500,
   },
 }));
-export default function LandingPage(params) {
+export default function LandingPage(props) {
     const classes = useStyles();
   const theme = useTheme();
-  const [value, setValue] = React.useState(0);
-
+  const [value, setValue] = useState(0);
+  const [popularRecipes, setPopularRecipes]= useState([])
+  useEffect(()=>{
+    async function fetchData(){
+      const popularRecipes = await fetch(`${config.SERVER_ENDPOINT}/recipes/popularRecipes`);
+      const jsonRecipes = await popularRecipes.json();
+      setPopularRecipes(jsonRecipes)
+    }
+    fetchData()
+    
+  },[])
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -83,7 +93,18 @@ export default function LandingPage(params) {
         </Link>
         
     }
-        return(
+    const renderPopular=popularRecipes.map((recipe,index)=>{
+        return (<div key={index}>
+          <Link to={`/recipeOfTheDay/${recipe.recipe.id}`} >
+            <h6>{recipe.recipe.title}</h6>
+            <img src={recipe.recipe.image}></img>
+          </Link>
+          
+
+        </div>)
+      })
+    
+    return(
         <div>
             <VisitorHeader/>
             <h3>Weclome to Cook Space!</h3>
@@ -129,6 +150,8 @@ export default function LandingPage(params) {
         
       </SwipeableViews>
     </div>
+    <h5>Popular</h5>
+      {renderPopular}
         </div>
     )
 }
