@@ -7,6 +7,8 @@ import {Link, useHistory} from 'react-router-dom'
 
 export default function DisplayRecipe(props){
   const [eventId,setEventId]= useState('');
+  const [recipeReviews,setRecipeReview]= useState([]);
+
   const Context = useContext(context);
   const history=useHistory()
   const recipe=Context.recipe
@@ -16,6 +18,22 @@ export default function DisplayRecipe(props){
 const recipe_id= props.match.params.recipe_id;
   useEffect(()=>{
     async function getRecipe(){
+      fetch(`${config.SERVER_ENDPOINT}/recipes/${recipe_id}/comment`, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json'
+        }
+      })
+        .then(res => {
+          if (!res.ok) return res.json().then(e => Promise.reject(e))
+          return res.json()
+        })
+        .then(recipesReview => {
+          setRecipeReview(recipesReview)
+          })
+        .catch(error => {
+          console.error({ error })
+        })
        return fetch(`${config.API_ENDPOINT}recipes/${recipe_id}/information?includeNutrition=false&apiKey=${apiKey}`, {
           method: 'GET',
           headers: {
@@ -173,6 +191,8 @@ const recipe_id= props.match.params.recipe_id;
           <ul>
             {renderInstructions}
           </ul>
+          <h5>Comments</h5>
+          {recipeReviews[0]?recipeReviews[0].comment:'no comment'}
         </div>
         
         

@@ -1,7 +1,9 @@
 import React,{useContext, useState} from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import Rating from '@material-ui/lab/Rating';
 import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 import Slider from '@material-ui/core/Slider';
 import Input from '@material-ui/core/Input';
 import AccessTime from '@material-ui/icons/AccessTime';
@@ -32,6 +34,7 @@ export default function SearchRecipe(props){
     const [cookTime, setCookTime] = useState(10000);
     const  user_id  = props.user_id;
     const [anchorEl, setAnchorEl] = useState(null);
+    const [recipeReviews, setRecipeReview] = useState([]);
 
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
@@ -83,14 +86,56 @@ export default function SearchRecipe(props){
               console.error({ error })
             })
 
+            fetch(`${config.SERVER_ENDPOINT}/recipes`, {
+              method: 'GET',
+              headers: {
+                'content-type': 'application/json'
+              }
+            })
+              .then(res => {
+                if (!res.ok) return res.json().then(e => Promise.reject(e))
+                return res.json()
+              })
+              .then(recipesReview => {
+                setRecipeReview(recipesReview)
+                })
+              .catch(error => {
+                console.error({ error })
+              })
+
     }
     const results=Context.recipes;
+    const api_id=recipeReviews.map(review=>review.api_id)
+    console.log(api_id)
+    const resultsReview= results.map(result=>{
+      let recipeId;
+      let comment;
+      let rating;
+      let commentedUser;
+      if(recipeReviews[api_id.indexOf(`${result.id}`)]){
+         recipeId=recipeReviews[api_id.indexOf(`${result.id}`)].api_id;
+         comment=recipeReviews[api_id.indexOf(`${result.id}`)].comment;
+         rating = recipeReviews[api_id.indexOf(`${result.id}`)].liked;
+         commentedUser=recipeReviews[api_id.indexOf(`${result.id}`)].user_id;
+      }
+        
+        return {
+          ...result,
+          recipeId,
+          comment,
+          rating,
+          commentedUser
+
+        }
+    })
+    
+    console.log(results,'this is the result, need to add review to them',resultsReview)
     let display;
     if(!results){
       display = null
         
     }
-     else display = results.map((recipe,key)=>{ 
+     else display = resultsReview.map((recipe,key)=>{ 
             return (<div className='subContainer' key={key}>
             <h3>{recipe.title}</h3>
             
@@ -101,11 +146,13 @@ export default function SearchRecipe(props){
                 {/* add review here and once click in show comments */}
 
            </Link>
-
+          {recipe.rating?      <Box component="fieldset" mb={3} borderColor="transparent">
+        <Typography component="legend">Read only</Typography>
+        <Rating name="read-only" value={recipe.rating} readOnly />
+      </Box>:null}
         </div>)
 
     })
-    console.log(display)
     window.onload=function(){
       let mybutton = document.getElementById("myBtn");
 
