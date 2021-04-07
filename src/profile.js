@@ -10,6 +10,17 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import Avatar from '@material-ui/core/Avatar';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& > *': {
+      margin: theme.spacing(1),
+    },
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -44,12 +55,7 @@ function TabPanel(props) {
     };
   }
   
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-      backgroundColor: theme.palette.background.paper,
-    },
-  }));
+ 
   
 export default function Profile(props){
     const [randomRecipe, setRandomRecipe]= useState({});
@@ -59,8 +65,8 @@ export default function Profile(props){
     const [allUsers, setAllUser] = useState([])
     const [matchingUsers, setMatchingUsers] = useState([])
     const classes = useStyles();
-    const [value, setValue] = React.useState(0);
-  
+    const [value, setValue] = useState(0);
+
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
@@ -93,7 +99,9 @@ export default function Profile(props){
         return (
             <li key={key}>
                 {friend.email}
-                {friend.username}
+                {friend.username?friend.username:"You don't have a friend on the list yet!"}
+                {friend.profile_pic?<Avatar alt="user's avatar" src={friend.profile_pic} />:<Avatar>{friend.username.substring(0,2).toUpperCase()}</Avatar>}
+
                 <button onClick={deleteFriend} value={friend.friend_id}>remove</button>
             </li>
         )
@@ -180,7 +188,7 @@ export default function Profile(props){
     const friendsName= friends.map((friend)=>{
       return friend.username
     })
-    console.log(friendsName, 'testing')
+    console.log(matchingUsers, 'testing')
 
     const dispalyMatchingUsers = matchingUsers.map((user,index)=>{
 
@@ -188,6 +196,7 @@ export default function Profile(props){
                 return(
                     <li key={index}>
                         {user.username}
+                        {user.profile_pic?<Avatar alt="user's avatar" src={user.profile_pic} />:<Avatar>{user.username.substring(0,2).toUpperCase()}</Avatar>}
                         {friendsName.includes(user.username)?
                         <button onClick={AddFriend} value={user.username} disabled>Add </button>:
                         <button onClick={AddFriend} value={user.username}>Add </button>}
@@ -228,7 +237,7 @@ export default function Profile(props){
       </AppBar>
       <TabPanel value={value} index={0}>
       <h5>My friends</h5>
-
+      {displayFriends}
 
 <label htmlFor="friendName">Add Friend: </label>
    <input type="text" id="friendName" name="friendName" placeholder="username" onChange={showMatchingUser}>
@@ -238,7 +247,7 @@ export default function Profile(props){
     {dispalyMatchingUsers}
 
 </ul>
-{displayFriends}
+
       </TabPanel>
       <TabPanel value={value} index={1}>
       <h6>
@@ -250,7 +259,7 @@ export default function Profile(props){
     </div>
            
 
-            <h6>Recipe of the day</h6><br/>
+            <h6>Recipe of the day: {randomRecipe.recipes? randomRecipe.recipes.recipes[0].title:null}</h6><br/>
             <Link to={randomRecipe.recipes?`/users/${user_id}/${randomRecipe.recipes.recipes[0].id}`:'/'} >
              <h6>{randomRecipe.recipes? randomRecipe.recipes.recipes[0].title:null}</h6>
             <img src={randomRecipe.recipes? randomRecipe.recipes.recipes[0].image:null} alt="image of food" />

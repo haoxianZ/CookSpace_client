@@ -57,7 +57,7 @@ export default function UserPage(props){
             <h4>Welcome back {user.username}!</h4>
 
             <h5>What's cookin?</h5>
-            <h5>Recipe of the day</h5>
+            <h5>Recipe of the day：{randomRecipe.recipes?randomRecipe.recipes.recipes[0].title:null}</h5>
             {recipeOfTheDay}
             <br/>
             <h6>Popular</h6>
