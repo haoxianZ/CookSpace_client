@@ -1,6 +1,6 @@
 {
-    "name": "",
-    "short_name": "",
+    "short_name": "CookSpace",
+    "name": "Your Cooking Space",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
