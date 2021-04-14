@@ -192,7 +192,9 @@ const recipe_id= props.match.params.recipe_id;
             {renderInstructions}
           </ul>
           <h5>Comments</h5>
-          {recipeReviews[0]?recipeReviews[0].comment:'no comment'}
+          {recipeReviews[0]?recipeReviews.map((review,index)=>{
+            return <div><p key={index}>{review.comment} by {review.username}</p></div>
+          }):'no comment'}
         </div>
         
         

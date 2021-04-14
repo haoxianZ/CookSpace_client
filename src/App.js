@@ -12,9 +12,9 @@ import VoiceControl from './voiceCommand'
 import config from './config';
 import context from './context';
 import SearchRecipe from './searchRecipe/searchRecipe'
-import UserPage from './userPage'
+import UserPage from './userPage/userPage'
 import DisplayRecipe from './displayRecipe'
-import CreateEvent from './createEvent'
+import CreateEvent from './createEvent/createEvent'
 import Profile from './profile'
 import Events from './events'
 import DisplayRecipeOfTheDay from './displayRecipeOfTheDay'
@@ -102,7 +102,7 @@ function App() {
        
         <Route exact path="/users/:userid" component={UserPage} />
         <Route exact path="/users/:userid/videoCall/:event_id" component={VideoCall} />
-        <Route exact path="/users/:userid/review/:recipe_id" component={Review} />
+        <Route exact path="/users/:userid/review/:event_id/" component={Review} />
 
         <Route exact path="/users/:userid/events" component={Events} />
         <Route exact path="/users/:userid/profile" component={Profile} />

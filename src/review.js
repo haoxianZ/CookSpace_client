@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import Rating from '@material-ui/lab/Rating';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
@@ -7,14 +7,25 @@ import { useHistory } from 'react-router';
 import Header from './header';
 export default function Review(props){
     const [rating, setRating] = useState(3);
+    const [recipe, setEvent] = useState(null);
     const history = useHistory();
     const  user_id  = props.match.params.userid;
-    const recipe_id = props.match.params.recipe_id;
+    const event_id=props.match.params.event_id;
+    useEffect(()=>{
+      async function fetchData(){
+        const savedEvents = await fetch(`${config.SERVER_ENDPOINT}/events/event/${event_id}`);
+        const jsonEvents = await savedEvents.json();
+       setEvent(jsonEvents.event_recipe_id)
+      console.log(jsonEvents)
+      }
+      fetchData()
+      
+    },[])
     const handleReview=(e)=>{
         e.preventDefault();
         console.log(e.target['comment'].value)
         const review = {
-            api_id: recipe_id,
+            api_id: recipe.id,
             comment:e.target['comment'].value,
             liked:rating,
             user_id:user_id
@@ -43,6 +54,8 @@ export default function Review(props){
     return(
         <div className="review">
             <Header home={`/users/${user_id}`} profile={`/users/${user_id}/profile`} events={`/users/${user_id}/events`} list={`/users/${user_id}/list`}/>
+            {recipe?<div><h3>{recipe.title}</h3>
+            <img src={recipe.image}/></div>:null}
             <Box component="fieldset" mb={3} borderColor="transparent">
                 <Typography component="legend">Rating</Typography>
                 <Rating

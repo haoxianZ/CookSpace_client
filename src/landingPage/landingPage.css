@@ -1,6 +1,7 @@
 .header{
-display: flex;
-flex-direction: row;    
+display: initial;
+flex-direction: row;   
+text-align: center; 
 }
 .link{
     flex-direction: row;
@@ -8,4 +9,18 @@ flex-direction: row;
 html {
     height: 100%;
     width: 100%;
+}
+.intro{
+    vertical-align: middle;
+}
+.recipes{
+    text-align: center;
+}
+h3, h4, h5{
+    text-align: center;
+    width: 70%;
+    margin: auto;
+}
+.MuiMobileStepper-dots{
+    margin: auto;
 }

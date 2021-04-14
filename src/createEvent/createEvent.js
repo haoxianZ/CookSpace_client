@@ -1,12 +1,13 @@
 import React,{useContext,useState} from 'react';
-import context from './context';
+import context from '../context';
 import TextField from '@material-ui/core/TextField';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import DateTimePicker from '@material-ui/lab/DateTimePicker';
-import Header from './header';
-import config from './config'
+import Header from '../header';
+import config from '../config'
 import { useHistory } from 'react-router-dom';
+import './createEvent.css'
 export default function CreateEvent(props){
     const history= useHistory()
 
@@ -65,23 +66,29 @@ export default function CreateEvent(props){
         <div className="createEvent">
             <Header/>
             <button onClick={handleSave}>Save</button>
-            <h4>{recipe.title}</h4>
-            <label htmlFor='eventName' >Event Name:</label>
-            <input type='text'id='eventName' name='eventName' onChange={handleChange}></input>
-            <img src={recipe.image} alt={recipe.title} />
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DateTimePicker
-        renderInput={(props) => <TextField {...props} />}
-        label="DateTimePicker"
-        value={eventDate}
-        onChange={(newValue) => {
-          setValue(newValue);
-        }}
-      />
-    </LocalizationProvider>
-            <h4>
-                Host: {Context.user.username}
-            </h4>
+            <div className="eventDetails">
+              <h4>{recipe.title}</h4>
+              <label htmlFor='eventName' >Event Name:</label>
+              <input type='text'id='eventName' name='eventName' onChange={handleChange}></input>
+              <img src={recipe.image} alt={recipe.title} />
+              <br/>
+              <br/>
+              <br/>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DateTimePicker
+                renderInput={(props) => <TextField {...props} />}
+                label="DateTimePicker"
+                value={eventDate}
+                onChange={(newValue) => {
+                  setValue(newValue);
+                }}
+              />
+              </LocalizationProvider>
+              <h4>
+                  Host: {Context.user.username}
+              </h4>
+            </div>
+            
             <ul>
                 {displayFriends}
             </ul>

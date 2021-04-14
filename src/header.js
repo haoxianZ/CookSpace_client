@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuIcon from '@material-ui/icons/Menu';
+import SearchRecipe from './searchRecipe/searchRecipe';
 export default function Header(props) {
     console.log(props.profile, props.events)
     const [anchorEl, setAnchorEl] = useState(null);
@@ -23,9 +24,9 @@ export default function Header(props) {
   };
 
     return(
-        <div>
-            <header>
-            <Button 
+        <div className="header">
+            
+              <Button 
       aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
         <MenuIcon/>
       </Button>
@@ -43,33 +44,9 @@ export default function Header(props) {
         <Link to={props.list? props.list:'/' } ><MenuItem onClick={handleClose}>Shopping List</MenuItem></Link>
 
       </Menu>
-                {/* <Container>
-                <Row>
-                    <Col>
-                        <Navbar.Brand href={props.home? props.home:'/' }>Home Page</Navbar.Brand>
-                    </Col>
-                    <Col>
-                        <Nav.Link className='link' href={props.profile? props.profile:'/' } >Profile</Nav.Link>
-                    </Col>
-                        <Col>
-                        <Nav.Link className='link' href="/search">Search</Nav.Link>
-                        </Col>
-                        <Col>
-                        <Nav.Link className='link' href="/signIn">Sign In</Nav.Link>
-                        </Col> 
-                    <Col>
-                        <Nav.Link className='link' href={props.events? props.events:'/' }>Events</Nav.Link>
-                    </Col>
-                    <Col>
-                        <Nav.Link className='link' href={props.list? props.list:'/' }>Shopping List</Nav.Link>
-                    </Col>
-                        
-                    
-                </Row>
-               
-                </Container> */}
-            
-            </header>
+
+                      
+
         </div>
     )
 }

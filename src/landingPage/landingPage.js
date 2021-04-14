@@ -1,11 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {Link} from 'react-router-dom';
-import Navbar from 'react-bootstrap/Navbar'
-import Nav from 'react-bootstrap/Nav'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Container from 'react-bootstrap/Container'
-import SignInSide from '../signIn'
 import context from '../context';
 import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
@@ -19,7 +13,12 @@ import FacebookIcon from '@material-ui/icons/Facebook';
 import Button from '@material-ui/core/Button';
 import VisitorHeader from '../visitorHeader/visitorHeader';
 import SearchRecipe from '../searchRecipe/searchRecipe';
+import MobileStepper from '@material-ui/core/MobileStepper';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import config from '../config';
+import { bindKeyboard, autoPlay } from 'react-swipeable-views-utils';
+import './landingPage.css'
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -56,13 +55,22 @@ function a11yProps(index) {
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
-    width: 500,
-  },
+    textAlign:"center",
+    margin:"auto"
+  }
 }));
 export default function LandingPage(props) {
     const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = useState(0);
+  const [activeStep, setActiveStep] = React.useState(0);
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
   const [popularRecipes, setPopularRecipes]= useState([])
   useEffect(()=>{
     async function fetchData(){
@@ -76,9 +84,10 @@ export default function LandingPage(props) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const BindKeyboardSwipeableViews = bindKeyboard(autoPlay(SwipeableViews));
 
   const handleChangeIndex = (index) => {
-    setValue(index);
+    setActiveStep(index);
   };
       const { randomRecipe} = useContext(context);
         console.log(randomRecipe)
@@ -108,51 +117,51 @@ export default function LandingPage(props) {
         <div>
             <VisitorHeader/>
             <h3>Weclome to Cook Space!</h3>
-           
-            <div className={classes.root}>
-      <AppBar position="static" color="default">
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
-          aria-label="full width tabs example"
-        >
-          <Tab label="Welcome!" {...a11yProps(0)} />
-          <Tab label="Recipe of the day" {...a11yProps(1)} />
-        </Tabs>
-      </AppBar>
-      <SwipeableViews
-        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-        index={value}
-        onChangeIndex={handleChangeIndex}
-      >
-        <TabPanel value={value} index={0} dir={theme.direction}>
-          <h5>Weclome to Cook Space!</h5>
-          <p>Connnect and cook with others all online</p>
-          <Link to="/signUp">
-              <Button variant="contained" color="primary">Sign Up! </Button>
-          </Link>
-        </TabPanel>
-        <TabPanel value={value} index={1} dir={theme.direction}>
-        {linkToRecipe}
-          
-           <div className="fb-share-button" 
-           data-href={sourceURL}
-           data-layout="button" data-size="large">
-                <a target="_blank" 
-                href={`https://www.facebook.com/sharer/sharer.php?u=${sourceURL}&amp;src=sdkpreparse`} 
-                className="fb-xfbml-parse-ignore">
-                <FacebookIcon>Share</FacebookIcon></a>
+            <div >
+                <BindKeyboardSwipeableViews className={classes.root}
+                index={activeStep}
+                onChangeIndex={handleChangeIndex}	>
+                  <div className="intro">
+                    <h5>Weclome to Cook Space!</h5>
+                    <p>Connnect and cook with others all online</p>
+                    <Link to="/signUp">
+                        <Button variant="contained" color="primary">Sign Up! </Button>
+                    </Link>
+                  </div>
+                  <div className="content">
+                    {linkToRecipe}
+                  
+                    <div className="fb-share-button" 
+                      data-href={sourceURL}
+                      data-layout="button" data-size="large">
+                        <a target="_blank" 
+                        href={`https://www.facebook.com/sharer/sharer.php?u=${sourceURL}&amp;src=sdkpreparse`} 
+                        className="fb-xfbml-parse-ignore">
+                        <FacebookIcon>Share</FacebookIcon></a>
+                    </div>
+                  </div>
+                </BindKeyboardSwipeableViews>
+                <MobileStepper
+                variant="dots"
+                steps={2}
+                position="static"
+                activeStep={activeStep}
+                // nextButton={
+                //   <Button size="small" >
+                    
+                //   </Button>
+                // }
+                // backButton={
+                //   <Button size="small">
+                    
+                //   </Button>
+                // }
+                  />
             </div>
-        </TabPanel>
-        
-      </SwipeableViews>
-    </div>
-    <h5>Popular</h5>
-      {renderPopular}
-        </div>
+            <h5>Popular</h5>
+            <div className="recipes">{renderPopular}</div>
+            
+      </div>
     )
 }
 

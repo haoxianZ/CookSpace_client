@@ -48,6 +48,7 @@ let renderIngredients;
     let recipe={};
     let eventName;
     let recipe_id;
+    let username='';
 const [event, setEvent]=useState(null)
 useEffect(()=>{
     async function fetchData(){
@@ -65,6 +66,7 @@ useEffect(()=>{
     recipe = event.event_recipe_id
     eventName=event.event_name
     recipe_id=event.event_recipe_id.id
+    username=event.username
     console.log(recipe_id)
   }
 
@@ -105,7 +107,7 @@ useEffect(()=>{
       </iframe> */}
       <Jutsu
       roomName={roomName}
-      displayName={'blablabla'}
+      displayName={username}
       
       />
 

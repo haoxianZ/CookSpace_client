@@ -33,6 +33,7 @@ export default function SearchRecipe(props){
     const classes = useStyles();
     const [cookTime, setCookTime] = useState(10000);
     const  user_id  = props.user_id;
+    console.log(user_id)
     const [anchorEl, setAnchorEl] = useState(null);
     const [recipeReviews, setRecipeReview] = useState([]);
 
@@ -110,12 +111,21 @@ export default function SearchRecipe(props){
     const resultsReview= results.map(result=>{
       let recipeId;
       let comment;
-      let rating;
+      let rating=[];
+      let ratingNum=0;
       let commentedUser;
       if(recipeReviews[api_id.indexOf(`${result.id}`)]){
+        console.log(recipeReviews)
          recipeId=recipeReviews[api_id.indexOf(`${result.id}`)].api_id;
          comment=recipeReviews[api_id.indexOf(`${result.id}`)].comment;
-         rating = recipeReviews[api_id.indexOf(`${result.id}`)].liked;
+         recipeReviews.map(review=>{
+           if(review.api_id===recipeId){
+             rating.push(review.liked)
+           }
+         })
+         ratingNum=rating.length
+         rating = rating.reduce((a, b) => a + b) / ratingNum;
+         
          commentedUser=recipeReviews[api_id.indexOf(`${result.id}`)].user_id;
       }
         
@@ -124,7 +134,8 @@ export default function SearchRecipe(props){
           recipeId,
           comment,
           rating,
-          commentedUser
+          commentedUser,
+          ratingNum
 
         }
     })
@@ -135,7 +146,7 @@ export default function SearchRecipe(props){
       display = null
         
     }
-     else display = resultsReview.map((recipe,key)=>{ 
+     else display = resultsReview.map((recipe,key)=>{
             return (<div className='subContainer' key={key}>
             <h3>{recipe.title}</h3>
             
@@ -146,10 +157,14 @@ export default function SearchRecipe(props){
                 {/* add review here and once click in show comments */}
 
            </Link>
-          {recipe.rating?      <Box component="fieldset" mb={3} borderColor="transparent">
-        <Typography component="legend">Read only</Typography>
-        <Rating name="read-only" value={recipe.rating} readOnly />
-      </Box>:null}
+          {recipe.rating?<Box component="fieldset" mb={3} borderColor="transparent">
+        <Typography component="legend"> ({recipe.ratingNum})</Typography>
+        <Rating name="read-only" value={recipe.rating} precision={0.5} readOnly />
+       
+      </Box>:<Box component="fieldset" mb={3} borderColor="transparent">
+        <Typography component="legend">It has not been rated yet</Typography>
+        <Rating name="read-only" value={null} readOnly />
+      </Box>}
         </div>)
 
     })
@@ -176,18 +191,12 @@ export default function SearchRecipe(props){
       document.documentElement.scrollTo({top:0,behavior: 'smooth'}); // For Chrome, Firefox, IE and Opera
     }
     return(
-        <div>
-            <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-                <TuneIcon/>
-                </Button>
+      <>
+        <div className="searchBar">
                 <form onSubmit={handleSubmit}>
                <input type="text" id="keyWord" name="keyWord" placeholder="Search for Recipes">
                </input>
                <button type='submit' className='submitBtn'><SearchIcon/> </button>
-
-               
-              
-
       <Menu
         id="simple-menu"
         anchorEl={anchorEl}
@@ -255,9 +264,15 @@ export default function SearchRecipe(props){
             
 
             </form>
-            {display}
+            <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                <TuneIcon/>
+            </Button>
+            </div>
+            <div className="display">
+              {display}
+            </div>
             <button onClick={topFunction} id="myBtn" title="Go to top">Top</button>
-
-        </div>
+</>
+        
     )
 }

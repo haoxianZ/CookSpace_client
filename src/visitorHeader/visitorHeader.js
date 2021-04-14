@@ -18,8 +18,9 @@ export default function VisitorHeader() {
   };
 
   return (
-    <div>
+    <div className="header">
       <Button 
+      className="subcontainer"
       aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
         <MenuIcon/>
       </Button>

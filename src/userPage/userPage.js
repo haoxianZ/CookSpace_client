@@ -1,9 +1,10 @@
 import React, {useContext, useState, useEffect} from 'react';
-import Header from './header';
-import context from './context';
-import SearchRecipe from './searchRecipe/searchRecipe';
-import config from './config';
+import Header from '../header';
+import context from '../context';
+import SearchRecipe from '../searchRecipe/searchRecipe';
+import config from '../config';
 import {Link} from 'react-router-dom'
+import "./userPage.css"
 export default function UserPage(props){
     const [user, setUser] = useState({})
     const [popularRecipes, setPopularRecipes]= useState([])
@@ -51,17 +52,21 @@ export default function UserPage(props){
      
     return(
         <div>
-            <Header home={`/users/${user_id}`} profile={`/users/${user_id}/profile`} events={`/users/${user_id}/events`} list={`/users/${user_id}/list`} />
-            <SearchRecipe user_id={user_id} />
+            <Header 
+            user_id={user_id}
+            home={`/users/${user_id}`} profile={`/users/${user_id}/profile`} events={`/users/${user_id}/events`} list={`/users/${user_id}/list`} />
+            <SearchRecipe user_id={user_id}/>
 
             <h4>Welcome back {user.username}!</h4>
-
-            <h5>What's cookin?</h5>
+            <div className="userPage">
+              <h5>What's cookin?</h5>
             <h5>Recipe of the day：{randomRecipe.recipes?randomRecipe.recipes.recipes[0].title:null}</h5>
             {recipeOfTheDay}
             <br/>
             <h6>Popular</h6>
             {renderPopular}
+            </div>
+            
         </div>
     )
 }

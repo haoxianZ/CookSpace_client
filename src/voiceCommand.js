@@ -153,7 +153,7 @@ export default function VoiceControl(props){
         variant="dots"
         activeStep={activeStep}
         nextButton={activeStep===maxSteps-1?(
-          <Link to={`/users/${props.user_id}/review/${event.event_recipe_id.id}`}><Button size="small" >
+          <Link to={`/users/${props.user_id}/review/${event.id}`}><Button size="small" >
             Finish
           </Button>
           </Link>
