@@ -1,5 +1,5 @@
 import React,{useContext, useState} from 'react'
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Rating from '@material-ui/lab/Rating';
 import Typography from '@material-ui/core/Typography';
@@ -15,22 +15,80 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import TuneIcon from '@material-ui/icons/Tune';
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme)=>({
     root: {
-      width: 250,
+    },
+    backdrop: {
+      zIndex: theme.zIndex.drawer + 1,
+      color: '#fff',
     },
     input: {
       width: 42,
     },
-  });
+  }));
   
 export default function SearchRecipe(props){
+  const iOSBoxShadow =
+  '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)';
+  const IOSSlider = withStyles({
+    root: {
+      color: '#3880ff',
+      height: 2,
+      padding: '15px 0',
+    },
+    thumb: {
+      height: 28,
+      width: 28,
+      backgroundColor: '#fff',
+      boxShadow: iOSBoxShadow,
+      marginTop: -14,
+      marginLeft: -14,
+      '&:focus, &:hover, &$active': {
+        boxShadow: '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.3),0 0 0 1px rgba(0,0,0,0.02)',
+        // Reset on touch devices, it doesn't add specificity
+        '@media (hover: none)': {
+          boxShadow: iOSBoxShadow,
+        },
+      },
+    },
+    active: {},
+    valueLabel: {
+      left: 'calc(-50% + 12px)',
+      top: -22,
+      '& *': {
+        background: 'transparent',
+        color: '#000',
+      },
+    },
+    track: {
+      height: 2,
+    },
+    rail: {
+      height: 2,
+      opacity: 0.5,
+      backgroundColor: '#bfbfbf',
+    },
+    mark: {
+      backgroundColor: '#bfbfbf',
+      height: 8,
+      width: 1,
+      marginTop: -3,
+    },
+    markActive: {
+      opacity: 1,
+      backgroundColor: 'currentColor',
+    },
+  })(Slider);
+
     const Context = useContext(context);
     const history = useHistory();
     const classes = useStyles();
+    const [status, setStatus]= useState(false)
     const [cookTime, setCookTime] = useState(10000);
     const  user_id  = props.user_id;
     console.log(user_id)
@@ -58,7 +116,7 @@ export default function SearchRecipe(props){
     const handleBlur = () => {
       if (cookTime < 0) {
         setCookTime(0);
-      } else if (cookTime > 10000) {
+      } else if (cookTime > 120) {
         setCookTime(10000);
       }
     };
@@ -68,6 +126,7 @@ export default function SearchRecipe(props){
         const includeIngredients= document.getElementById("includeIngredient").value;
         const excludeIngredients = document.getElementById("excludeIngredient").value;
         const cuisine = document.getElementById("cuisine").value;
+        setStatus(true)
 
         console.log(Context.spoonApi)
         fetch(`${config.API_ENDPOINT}recipes/complexSearch?query=${searchWord}&includeIngredients=${includeIngredients}&maxReadyTime=${cookTime}&excludeIngredients=${excludeIngredients}&cuisine=${cuisine}&apiKey=${Context.spoonApi}`, {
@@ -81,6 +140,8 @@ export default function SearchRecipe(props){
               return res.json()
             })
             .then(recipes => {
+              console.log(recipes.results)
+              if(recipes.results.length===0) alert('Ooops! That returned no result')
               Context.addRecipe(recipes.results)
               })
             .catch(error => {
@@ -98,6 +159,7 @@ export default function SearchRecipe(props){
                 return res.json()
               })
               .then(recipesReview => {
+                setStatus(false)
                 setRecipeReview(recipesReview)
                 })
               .catch(error => {
@@ -190,9 +252,32 @@ export default function SearchRecipe(props){
       document.body.scrollTop = 0; // For Safari
       document.documentElement.scrollTo({top:0,behavior: 'smooth'}); // For Chrome, Firefox, IE and Opera
     }
+    const marks = [
+      {
+        value: 0,
+        label: '0 min',
+      },
+      {
+        value: 30,
+        label: '30 min',
+      },
+      {
+        value: 60,
+        label: '60 min',
+      },
+      {
+        value: 90,
+        label: '90 min',
+      },
+      {
+        value: 121,
+        label: 'any',
+      },
+    ];
     return(
-      <>
+      <> 
         <div className="searchBar">
+
                 <form onSubmit={handleSubmit}>
                <input type="text" id="keyWord" name="keyWord" placeholder="Search for Recipes">
                </input>
@@ -205,11 +290,11 @@ export default function SearchRecipe(props){
         onClose={handleClose}
       >
         
-         <label htmlFor="includeIngredient">Must Include: </label>
+         <label htmlFor="includeIngredient">Include Ingredients: </label>
                <input type="text" id="includeIngredient" name="includeIngredient" placeholder="Peanut">
                </input>
         <br/>
-        <label htmlFor="excludeIngredient">Do Not Include</label>
+        <label htmlFor="excludeIngredient">Exclude Ingredients: </label>
                <input type="text" id="excludeIngredient" name="excludeIngredient" placeholder="Peanut">
                </input>
 
@@ -227,25 +312,29 @@ export default function SearchRecipe(props){
                     <AccessTime />
                     </Grid>
                     <Grid item xs>
-                    <Slider
+                    <IOSSlider
                         value={typeof cookTime === 'number' ? cookTime : 0}
                         onChange={handleSliderChange}
-                        aria-labelledby="input-slider"
+                        aria-labelledby="ios slider"
                         min={0}
-                        max={300}
+                        max={121}
+                        valueLabelDisplay="off"
+                        marks={marks}
+                        scale={(x) => x>=121?x * 100:x}
+
                     />
                     </Grid>
                     <Grid item>
                     <Input
                         className={classes.input}
-                        value={cookTime}
+                        value={cookTime>120?cookTime*100:cookTime}
                         margin="dense"
                         onChange={handleInputChange}
                         onBlur={handleBlur}
                         inputProps={{
                         step: 1,
                         min: 0,
-                        max: 1000,
+                        max: 120,
                         type: 'number',
                         'aria-labelledby': 'input-slider',
                         }}
@@ -271,6 +360,11 @@ export default function SearchRecipe(props){
             <div className="display">
               {display}
             </div>
+            <div>
+      <Backdrop className={classes.backdrop} open={status}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </div>
             <button onClick={topFunction} id="myBtn" title="Go to top">Top</button>
 </>
         

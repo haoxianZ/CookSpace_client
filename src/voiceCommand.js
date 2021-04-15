@@ -131,7 +131,7 @@ export default function VoiceControl(props){
       >
         
         {renderInstructions.map((step, index) => (
-          <div key={step.label}>
+          <div key={index}>
             {Math.abs(activeStep - index) <= 2 ? (
               <p>{renderInstructions[activeStep]?renderInstructions[activeStep]:null}</p>
               
