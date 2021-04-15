@@ -4,6 +4,7 @@ import config from './config';
 import LoadMore from './loadMore';
 import Header from './header'
 import {Link, useHistory} from 'react-router-dom'
+import VisitorHeader from './visitorHeader/visitorHeader';
 
 export default function DisplayRecipe(props){
   const [eventId,setEventId]= useState('');
@@ -175,13 +176,22 @@ const recipe_id= props.match.params.recipe_id;
     }
     return ( 
         <div className='recipes'>
-          <Header home={`/users/${user_id}`} profile={`/users/${user_id}/profile`} events={`/users/${user_id}/events`} list={`/users/${user_id}/list`} />
+          {user_id?<Header home={`/users/${user_id}`} profile={`/users/${user_id}/profile`} events={`/users/${user_id}/events`} list={`/users/${user_id}/list`} />
+          :<VisitorHeader/>}        
         <div className='container'>
           {renderRecipes}
-          <button onClick={Bookmark} >Bookmark this recipe</button>
+          {user_id?<button onClick={Bookmark}>Bookmark this recipe</button>:
+                    <button disabled>Bookmark this recipe</button>
+                  }
           <h5>Cooking Time: {cookingTime}</h5>
+          {user_id?
           <Link to={`/users/${user_id}/${recipe_id}/createEvent/${eventId}`} >Create Event</Link>
-          <h4>Ingredients:</h4> <button onClick={addToShoppingList} >Add Ingredients to Shopping List</button>
+          : <Link >Create Event</Link>
+        }
+          <h4>Ingredients:</h4> 
+          {user_id?<button onClick={addToShoppingList} >Add Ingredients to Shopping List</button>
+          :<button disabled >Add Ingredients to Shopping List</button>
+        }
           <br/>
           <ul>
             

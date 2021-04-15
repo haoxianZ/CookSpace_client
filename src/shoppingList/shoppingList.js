@@ -104,7 +104,7 @@ export default function ShoppingList(props){
         )
       })
     return (
-            <div>
+            <div className='shoppingList'>
             <Header home={`/users/${user_id}`} profile={`/users/${user_id}/profile`} events={`/users/${user_id}/events`} list={`/users/${user_id}/list`} />
 
              {renderPage}

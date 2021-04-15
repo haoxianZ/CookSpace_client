@@ -90,6 +90,13 @@ export default function SearchRecipe(props){
     const classes = useStyles();
     const [status, setStatus]= useState(false)
     const [cookTime, setCookTime] = useState(10000);
+    const [vegan, setVegan]= useState(false)
+    const [vegetarian, setVegetarian]= useState(false)
+    const [paleo, setPaleo]= useState(false)
+    const [healthy, setHealthy]= useState(false)
+    const [glutenFree, setGlutenFree]= useState(false)
+    const [dairyFree, setDairyFree]= useState(false)
+
     const  user_id  = props.user_id;
     console.log(user_id)
     const [anchorEl, setAnchorEl] = useState(null);
@@ -101,7 +108,6 @@ export default function SearchRecipe(props){
   
     const handleClose = () => {
       setAnchorEl(null);
-      alert('Search again with your filters!')
     };
   
 
@@ -122,14 +128,24 @@ export default function SearchRecipe(props){
     };
     const handleSubmit=(e)=>{
         e.preventDefault();
+        setAnchorEl(null);
+        setStatus(true)
         const searchWord = document.getElementById("keyWord").value;
         const includeIngredients= document.getElementById("includeIngredient").value;
         const excludeIngredients = document.getElementById("excludeIngredient").value;
-        const cuisine = document.getElementById("cuisine").value;
-        setStatus(true)
-
+        // const cuisine = document.getElementById("cuisine").value;
+        let intolerance;
+        if(dairyFree) intolerance="Dairy";
+        if(glutenFree) intolerance=intolerance+',Gluten';
+        let diet;
+        if(vegan) diet="Vegan"
+        if(vegetarian) diet+=",Vegetarian"
+        if(paleo) diet+=",Paleo"
+        
         console.log(Context.spoonApi)
-        fetch(`${config.API_ENDPOINT}recipes/complexSearch?query=${searchWord}&includeIngredients=${includeIngredients}&maxReadyTime=${cookTime}&excludeIngredients=${excludeIngredients}&cuisine=${cuisine}&apiKey=${Context.spoonApi}`, {
+        fetch(`${config.API_ENDPOINT}recipes/complexSearch?query=${searchWord}
+        &veryHealthy=${healthy}&includeIngredients=${includeIngredients}
+        &maxReadyTime=${cookTime}&excludeIngredients=${excludeIngredients}&diet=${diet}&intolerances=${intolerance}&apiKey=${Context.spoonApi}`, {
             method: 'GET',
             headers: {
               'content-type': 'application/json'
@@ -212,7 +228,7 @@ export default function SearchRecipe(props){
             return (<div className='subContainer' key={key}>
             <h3>{recipe.title}</h3>
             
-           <Link to={`/users/${user_id}/${recipe.id}`} >
+           <Link to={user_id?`/users/${user_id}/${recipe.id}`:`recipe/${recipe.id}`} >
                 <img src={recipe.image}
                             // onError={(e)=>{e.target.src='/404.jpg'}}
                             />
@@ -281,7 +297,7 @@ export default function SearchRecipe(props){
                 <form onSubmit={handleSubmit}>
                <input type="text" id="keyWord" name="keyWord" placeholder="Search for Recipes">
                </input>
-               <button type='submit' className='submitBtn'><SearchIcon/> </button>
+               <button type='submit' className='searchBtn'><SearchIcon/> </button>
       <Menu
         id="simple-menu"
         anchorEl={anchorEl}
@@ -289,20 +305,15 @@ export default function SearchRecipe(props){
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        
+        <div className='filterIngredients'>
          <label htmlFor="includeIngredient">Include Ingredients: </label>
-               <input type="text" id="includeIngredient" name="includeIngredient" placeholder="Peanut">
+               <input type="text" id="includeIngredient" name="includeIngredient" placeholder="Enter Ingredient">
                </input>
-        <br/>
         <label htmlFor="excludeIngredient">Exclude Ingredients: </label>
-               <input type="text" id="excludeIngredient" name="excludeIngredient" placeholder="Peanut">
+               <input type="text" id="excludeIngredient" name="excludeIngredient" placeholder="Enter Ingredient">
                </input>
+        </div> 
 
-               <br/>
-          <label htmlFor="cuisine">Cuisine Type</label>
-               <input type="text" id="cuisine" name="cuisine" placeholder="Italian">
-               </input>
-               <br/>
                         <div className={classes.root} id="cookTimeFilter">
                 <Typography id="input-slider" gutterBottom>
                     Cooking Time
@@ -341,10 +352,39 @@ export default function SearchRecipe(props){
                     /> mins
                     </Grid>
                 </Grid>
-                
-
+                <h5>Category</h5>
+                <section className='categories'>
+                  <div className='checkbox'> 
+                  <label htmlFor="categoryVegan">Vegan</label>
+                  <input type="checkbox" id="categoryVegan" name="categoryVegan"
+                  onClick={()=>{setVegan(!vegan)}}
+                  />
+                  <label htmlFor="categoryVegetarian">Vegetarian</label>
+                  <input type="checkbox" id="categoryVegetarian" 
+                  name="categoryVegetarian"
+                  onClick={()=>{setVegetarian(!vegetarian)}}/>
+                  <label htmlFor="categoryPaleo">Paleo</label>
+                  <input type="checkbox" id="categoryPaleo" 
+                  onClick={()=>{setPaleo(!paleo)}}
+                  name="categoryPaleo"/>
+                 </div>
+                 <div className='checkbox'>
+                   <label htmlFor="categoryHealthy">Healthy</label>
+                  <input type="checkbox" id="categoryHealthy" 
+                  onClick={()=>{setHealthy(!healthy)}}
+                  name="categoryHealthy"/>
+                  <label htmlFor="categoryDairyFree">Dairy Free</label>
+                  <input type="checkbox" id="categoryDairyFree" 
+                  onClick={()=>{setDairyFree(!dairyFree)}}
+                  name="categoryDairyFree"/>
+                  <label htmlFor="categoryGlutenFree">Gluten Free</label>
+                  <input type="checkbox" id="categoryGlutenFree"
+                  onClick={()=>{setGlutenFree(!glutenFree)}}
+                  name="categoryGlutenFree"/>
+                  </div> 
+                </section>
               </div>
-                <button type='submit' className='submitBtn' onClick={handleClose}>Apply Filter</button>
+                <button type='submit' className='submitBtn' onClick={handleSubmit}>Apply Filter</button>
       </Menu>
     
                
@@ -362,7 +402,9 @@ export default function SearchRecipe(props){
             </div>
             <div>
       <Backdrop className={classes.backdrop} open={status}>
-        <CircularProgress color="inherit" />
+        <h3>Seaching...</h3>
+        <p>One moment, please</p>
+        <CircularProgress color="secondary" />
       </Backdrop>
     </div>
             <button onClick={topFunction} id="myBtn" title="Go to top">Top</button>

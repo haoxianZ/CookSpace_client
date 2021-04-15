@@ -108,6 +108,8 @@ function App() {
         <Route exact path="/users/:userid/profile" component={Profile} />
         <Route exact path="/users/:userid/list" component={ShoppingList} />
         <Route exact path="/users/:userid/:recipe_id" component={DisplayRecipe} />
+        <Route exact path="/recipe/:recipe_id" component={DisplayRecipe} />
+
         <Route exact path="/recipeOfTheDay/:recipe_id" component={DisplayRecipeOfTheDay} />
         
         <Route exact path="/users/:userid/:recipe_id/createEvent/:eventId" component={CreateEvent} />

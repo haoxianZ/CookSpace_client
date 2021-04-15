@@ -1,4 +1,4 @@
-input:checked + label {
+.shoppingList input:checked + label {
     text-decoration: line-through;
   }
 label{
