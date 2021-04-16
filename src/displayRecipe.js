@@ -9,10 +9,9 @@ import VisitorHeader from './visitorHeader/visitorHeader';
 export default function DisplayRecipe(props){
   const [eventId,setEventId]= useState('');
   const [recipeReviews,setRecipeReview]= useState([]);
-
+  const [recipe,setRecipe]=useState(null)
   const Context = useContext(context);
   const history=useHistory()
-  const recipe=Context.recipe
   const apiKey= process.env.REACT_APP_API_KEY;
   const  user_id  = props.match.params.userid;
   console.log(user_id)
@@ -48,7 +47,7 @@ const recipe_id= props.match.params.recipe_id;
         throw new Error(response.statusText);
       })
       .then(responseJson => {
-        Context.handleRecipe(responseJson)
+        setRecipe(responseJson)
         return responseJson
         })
       .then(responseJson=>{
@@ -186,7 +185,7 @@ const recipe_id= props.match.params.recipe_id;
           <h5>Cooking Time: {cookingTime}</h5>
           {user_id?
           <Link to={`/users/${user_id}/${recipe_id}/createEvent/${eventId}`} >Create Event</Link>
-          : <Link >Create Event</Link>
+          : <Link to="#">Create Event</Link>
         }
           <h4>Ingredients:</h4> 
           {user_id?<button onClick={addToShoppingList} >Add Ingredients to Shopping List</button>

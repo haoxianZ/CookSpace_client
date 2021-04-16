@@ -20,15 +20,21 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import TuneIcon from '@material-ui/icons/Tune';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+
 const useStyles = makeStyles((theme)=>({
     root: {
     },
     backdrop: {
       zIndex: theme.zIndex.drawer + 1,
       color: '#fff',
+      display:'flex',
+      flexDirection:'column'
     },
     input: {
-      width: 42,
+      width: 60,
     },
   }));
   
@@ -96,6 +102,7 @@ export default function SearchRecipe(props){
     const [healthy, setHealthy]= useState(false)
     const [glutenFree, setGlutenFree]= useState(false)
     const [dairyFree, setDairyFree]= useState(false)
+    const [popular, setPopular]= useState(true)
 
     const  user_id  = props.user_id;
     console.log(user_id)
@@ -112,9 +119,9 @@ export default function SearchRecipe(props){
   
 
     const handleSliderChange = (event, newValue) => {
+      if(newValue>120) newValue=10000
       setCookTime(newValue);
     };
-  
     const handleInputChange = (event) => {
       setCookTime(event.target.value === '' ? '' : Number(event.target.value));
     };
@@ -138,14 +145,18 @@ export default function SearchRecipe(props){
         if(dairyFree) intolerance="Dairy";
         if(glutenFree) intolerance=intolerance+',Gluten';
         let diet;
+        let sort="";
         if(vegan) diet="Vegan"
         if(vegetarian) diet+=",Vegetarian"
         if(paleo) diet+=",Paleo"
+        if(popular) sort="popularity"
+        if(healthy) sort+=",healthiness"
         
         console.log(Context.spoonApi)
         fetch(`${config.API_ENDPOINT}recipes/complexSearch?query=${searchWord}
-        &veryHealthy=${healthy}&includeIngredients=${includeIngredients}
-        &maxReadyTime=${cookTime}&excludeIngredients=${excludeIngredients}&diet=${diet}&intolerances=${intolerance}&apiKey=${Context.spoonApi}`, {
+        &veryHealthy=${healthy}&includeIngredients=${includeIngredients}&instructionsRequired=true&sort=${sort}&sortDirection=asc
+        &maxReadyTime=${cookTime}&excludeIngredients=${excludeIngredients}&diet=${diet}&intolerances=${intolerance}
+        &number=25&apiKey=${Context.spoonApi}`, {
             method: 'GET',
             headers: {
               'content-type': 'application/json'
@@ -175,8 +186,9 @@ export default function SearchRecipe(props){
                 return res.json()
               })
               .then(recipesReview => {
-                setStatus(false)
                 setRecipeReview(recipesReview)
+                setStatus(false)
+
                 })
               .catch(error => {
                 console.error({ error })
@@ -225,17 +237,17 @@ export default function SearchRecipe(props){
         
     }
      else display = resultsReview.map((recipe,key)=>{
+       console.log(recipe.rating)
             return (<div className='subContainer' key={key}>
-            <h3>{recipe.title}</h3>
-            
-           <Link to={user_id?`/users/${user_id}/${recipe.id}`:`recipe/${recipe.id}`} >
+           <Link to={user_id?`/users/${user_id}/${recipe.id}`:`./recipe/${recipe.id}`} >
+             <h3>{recipe.title}</h3>
                 <img src={recipe.image}
                             // onError={(e)=>{e.target.src='/404.jpg'}}
                             />
                 {/* add review here and once click in show comments */}
 
            </Link>
-          {recipe.rating?<Box component="fieldset" mb={3} borderColor="transparent">
+          {recipe.ratingNum?<Box component="fieldset" mb={3} borderColor="transparent">
         <Typography component="legend"> ({recipe.ratingNum})</Typography>
         <Rating name="read-only" value={recipe.rating} precision={0.5} readOnly />
        
@@ -306,6 +318,12 @@ export default function SearchRecipe(props){
         onClose={handleClose}
       >
         <div className='filterIngredients'>
+        <FormGroup row>
+        <FormControlLabel
+        control={<Switch checked={popular} onClick={()=>{setPopular(!popular)}} name="checkedA" />}
+        label="Sort By Popularity"
+      />
+      </FormGroup>
          <label htmlFor="includeIngredient">Include Ingredients: </label>
                <input type="text" id="includeIngredient" name="includeIngredient" placeholder="Enter Ingredient">
                </input>
@@ -345,7 +363,7 @@ export default function SearchRecipe(props){
                         inputProps={{
                         step: 1,
                         min: 0,
-                        max: 120,
+                        max: Infinity,
                         type: 'number',
                         'aria-labelledby': 'input-slider',
                         }}
