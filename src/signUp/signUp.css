@@ -1,0 +1,84 @@
+.MuiStepIcon-root.MuiStepIcon-active{
+    color: #ee0000 !important;
+}
+.btnGroup{
+    display: flex;
+    justify-content: space-evenly;
+}
+.btnGroup button{
+    border-radius: 20px;
+}
+.signUpForm{
+background-color: black;
+color: aliceblue;
+width: 100%;
+margin: 0 !important;
+height: 100%;
+padding-inline: 10px;
+}
+.profilePicUrl{
+    width:100%;
+}
+ .profilePicUrl input{
+width: 100%;
+}
+.signUpForm input{
+    border-color: white;
+}
+.signInLink{
+    justify-content: center;
+}
+.signUpForm h5{
+    text-align: initial;
+}
+.MuiGrid-container{
+    margin-left: 0px !important;
+    width: 100% !important;
+    margin-top: -35px !important;
+    padding-top: 10px;
+    
+}
+.MuiStepIcon-root{
+    color: grey !important;
+}
+.makeStyles-root-5{
+    margin: 0 !important;
+}
+.signUpAvatar{
+    width: 120px !important;
+    height: 120px !important;
+    background-color: #f5cebc !important;   
+    font-size: 70px !important;
+    color: black !important;
+    margin-left: 10%;
+}
+.MuiGrid-item{
+    display: grid;
+    padding-left: 0 !important;
+}
+body{
+    height: 100%;
+    width: 100%;
+}
+#root{
+    height: 100%;
+    width: 100%;
+
+}
+.App{
+    height: 100%;
+    width: 100%;
+
+}
+main{
+    height: 100%;
+    padding: 0 !important;
+}
+.makeStyles-paper-1{
+    height: 100%;
+
+}
+.makeStyles-root-5{
+    height: 100%;
+
+}

@@ -12,10 +12,11 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import config from './config';
+import config from '../config';
 import {useHistory} from 'react-router-dom';
-import context from './context'
-import VisitorHeader from './visitorHeader/visitorHeader'
+import context from '../context'
+import VisitorHeader from '../visitorHeader/visitorHeader';
+import './signIn.css'
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -70,15 +71,18 @@ export default function SignInSide() {
           })
         })
   }
-  return (
-    <Grid container component="main" >
+  return ( 
+  <>
+  <VisitorHeader/>
 
-      <VisitorHeader/>
+    <Grid container component="main" className='signIn'>
+      
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div >
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+          
           <form  onSubmit={handleSubmit} noValidate>
             <TextField
               variant="outlined"
@@ -106,6 +110,7 @@ export default function SignInSide() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
+            
             <Button
               type="submit"
               fullWidth
@@ -115,7 +120,11 @@ export default function SignInSide() {
             >
               Sign In
             </Button>
-            <Grid container>
+            
+    
+          </form>
+          <br/><br/>        
+          <Grid container className="resetPassword">
               <Grid item xs>
                 <Link href="/reset" variant="body2">
                   Forgot password?
@@ -130,10 +139,10 @@ export default function SignInSide() {
             <Box mt={5}>
               <Copyright />
             </Box>
-          </form>
         </div>
       </Grid>
 
     </Grid>
+    </>
   );
 }

@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
     textAlign:"center",
-    margin:"auto"
+    margin:"auto",
   }
 }));
 export default function LandingPage(props) {
@@ -122,6 +122,7 @@ export default function LandingPage(props) {
                 index={activeStep}
                 onChangeIndex={handleChangeIndex}	>
                   <div className="intro">
+                    <br/><br/><br/>
                     <h5>Weclome to Cook Space!</h5>
                     <p>Connnect and cook with others all online</p>
                     <Link to="/signUp">

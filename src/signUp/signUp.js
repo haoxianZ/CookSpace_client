@@ -15,8 +15,9 @@ import Container from '@material-ui/core/Container';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import Header from './header'
-import config from './config'
+import Header from '../header';
+import './signUp.css'
+import config from '../config';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -32,15 +33,16 @@ function Copyright() {
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    width:'100%'
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
+
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(3),
@@ -50,6 +52,9 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     width: '100%',
+    '& > *': {
+      margin: theme.spacing(1),
+    },
   },
   backButton: {
     marginRight: theme.spacing(1),
@@ -58,10 +63,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
+  large: {
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+  },
 }));
 
 function getSteps() {
-  return ['1', '2'];
+  return ['1', '2','3'];
 }
 
 
@@ -69,6 +78,9 @@ function getSteps() {
 export default function SignUp(props) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
+  const [signUp, setSignUp] = useState(false);
+  const [user_id, setUser_id] = useState(null);
+
   const steps = getSteps();
   const [name, setName]=useState('');
   const [email, setEmail]=useState('');
@@ -79,6 +91,7 @@ export default function SignUp(props) {
   const [profilePic, setProfilePic]=useState('');
   const [cookingLevel, setCookingLevel]=useState('');
 
+  const [verification, setVerification]=useState(null);
 
   const handleName = (e)=>{
     setName(e.target.value)
@@ -96,6 +109,8 @@ export default function SignUp(props) {
     
 
   const handlePassword = (e)=>{
+    console.log('password', e.target.value)
+
     setPassword(e.target.value)
   }
   const handleConfirmPassword = (e)=>{
@@ -110,39 +125,52 @@ export default function SignUp(props) {
   const handleCookingLevel = (e)=>{
     setCookingLevel(e.target.value)
   }
+  const handleVerificationCode=(e)=>{
+    setVerification(e.target.value)
+  }
+  const handleVerify=(e)=>{
+    e.preventDefault()
+    console.log(verification, user_id)
+     fetch(`${config.SERVER_ENDPOINT}/users/verify?user_id=${user_id}&code=${verification}`, {
+          method: 'Get',
+          headers: {
+            'content-type': 'application/json'
+          }
+        })
+          .then(res => {
+            if (!res.ok)
+              return res.json().then(e => Promise.reject(e))
+            return res.json()
+          })
+          .then(user => {
+            props.history.push(`/users/${user.id}`);
+            window.location.reload(true);
+            alert('You have signed up!')
+            })
+          .catch(error => {
+            console.error({ error })
+          })
+        
+  }
 function getStepContent(stepIndex) {
   switch (stepIndex) {
     case 0:
       return (
         <Grid container spacing={2}>
         <Grid item xs={12}>
-          <TextField
-            autoComplete="fname"
-            name="username"
-            variant="outlined"
-            required
-            fullWidth
-            id="username"
-            label="Username"
-            autoFocus
-            onChange={handleName}
-          />
+          <label htmlFor="username">Full Name *</label>
+          <input type="text" id="username" placeholder="Joe Doe" onChange={handleName}
+          required></input>
+
         </Grid>
         
         <Grid item xs={12}>
-          <TextField
-            variant="outlined"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            onChange={handleEmail}
-
-          />
+        <label htmlFor="email">Email *</label>
+          <input type="email" id="email" placeholder="JoeDoe@abc.com"
+          onChange={handleEmail}
+          required></input>
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <TextField
             variant="outlined"
             required
@@ -154,42 +182,38 @@ function getStepContent(stepIndex) {
             onChange={handleConfirmEmail}
 
           />
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
-          <TextField
-            variant="outlined"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            onChange={handlePassword}
+        <label htmlFor="password">Password *</label>
+          <input type="password" id="password" placeholder="Password"
+          onChange={handlePassword}
+          required></input>
 
-          />
         </Grid>            
         <Grid item xs={12}>
-          <TextField
-            variant="outlined"
-            required
-            fullWidth
-            name="confirmPassword"
-            label="confirm your password"
-            type="password"
-            id="confirmPassword"
-            autoComplete="current-password"
-            onChange={handleConfirmPassword}
-
-          />
+        <label htmlFor="confirmPassword">Confirm Password *</label>
+          <input type="password" id="confirmPassword" placeholder="Re-type Password"
+          onChange={handleConfirmPassword}
+          required></input>
+          
         </Grid>
         </Grid>
       
       );
     case 1:
       return (
-        <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
+        <Grid container spacing={2} >
+          <h5>Profile Picture</h5>
+          <Avatar alt="username"className="signUpAvatar">{name?name[0].toUpperCase():null}</Avatar>
+          <div className='profilePicUrl'>
+            <label htmlFor="picture">URL of the Picture</label><br/>
+          <input type="text" id="picture" placeholder="Change Profile Picture to your URL Image"
+          onChange={handleProfilePic}
+          required></input>
+          </div>
+          
+
+        {/* <Grid item xs={12} sm={6}>
           <TextField
             name="profilePic"
             variant="outlined"
@@ -199,9 +223,13 @@ function getStepContent(stepIndex) {
             autoFocus
             onChange={handleProfilePic}
           />
-        </Grid>
+        </Grid> */}
         <Grid item xs={12} sm={6}>
-          <TextField
+        <label htmlFor="cookingLevel">What is your cooking level? *</label>
+          <input type="text" id="cookingLevel" placeholder="'Beginner', 'Intermediate','Advance'"
+          onChange={handleCookingLevel}
+          required></input>
+          {/* <TextField
             variant="outlined"
             fullWidth
             id="cookingLevel"
@@ -209,10 +237,14 @@ function getStepContent(stepIndex) {
             name="cookingLevel"
             onChange={handleCookingLevel}
 
-          />
+          /> */}
         </Grid>
         <Grid item xs={12}>
-          <TextField
+        <label htmlFor="bio">Write a fun bio!</label>
+          <input type="text" id="bio"
+          onChange={handleBio}
+          ></input>
+          {/* <TextField
             variant="outlined"
             fullWidth
             id="bio"
@@ -220,7 +252,7 @@ function getStepContent(stepIndex) {
             name="bio"
             onChange={handleBio}
 
-          />
+          /> */}
         </Grid>
         <Button
             type="submit"
@@ -234,7 +266,44 @@ function getStepContent(stepIndex) {
           </Button>
         </Grid>
       );
- 
+      case 2:
+      return (
+        <Grid container spacing={2} >
+          <h5>We have sent you the verification code to your email</h5>
+          <label htmlFor='verification'>Verification Code </label>
+          <input type='text' required id='verification' onChange={handleVerificationCode}></input>
+          <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="secondary"
+              className="submit"
+              onClick={handleVerify}
+            >
+              Verify
+            </Button>
+        </Grid>
+      );
+      // case 3:
+      //   return (
+      //     <Grid container spacing={2}>
+      //     <h5>Your CookSpace account is complete.</h5>
+      //     <p>Log in to start cooking!</p>
+      //     <Link to="/signIn">
+      //        <Button
+      //         type="submit"
+      //         fullWidth
+      //         variant="contained"
+      //         color="secondary"
+      //         className="submit"
+
+      //       >
+      //         Log in
+      //       </Button>
+      //     </Link>
+         
+      //     </Grid>
+      //   );
     default:
       return 'Unknown stepIndex';
   }
@@ -253,6 +322,7 @@ function getStepContent(stepIndex) {
   };
   const handleSignUp=(e)=>{
     e.preventDefault()
+    console.log(password,confirmPassword)
         const newUser = {
           username: name,
          email: email,
@@ -262,9 +332,6 @@ function getStepContent(stepIndex) {
          cooking_level: cookingLevel,
         }
         if(confirmPassword!==newUser.password){
-          alert('Passwords do not match!')
-        }
-        else if(confirmEmail!==newUser.email){
           alert('Passwords do not match!')
         }
         else{
@@ -281,9 +348,11 @@ function getStepContent(stepIndex) {
             return res.json()
           })
           .then(user => {
-            props.history.push(`/`);
-            window.location.reload(true);
-            alert('You have signed up!')
+            // props.history.push(`/`);
+            setSignUp(true)
+            setUser_id(user.id)
+            // window.location.reload(true);
+            // alert('You have signed up!')
             })
           .catch(error => {
             console.error({ error })
@@ -295,14 +364,22 @@ function getStepContent(stepIndex) {
   return (
     <Container component="main" maxWidth="xs">
       <Header/>
+      
       <CssBaseline />
+      
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          Create An Account
         </Typography>
+        <br/>
+        <br/>
+        <Grid container className="signInLink">
+            <Grid item>
+              <Link href="/signIn" variant="body2">
+                Already have an account? Sign in
+              </Link>
+            </Grid>
+          </Grid>
         <div className={classes.root}>
       <Stepper activeStep={activeStep} alternativeLabel>
         {steps.map((label) => (
@@ -311,7 +388,7 @@ function getStepContent(stepIndex) {
           </Step>
         ))}
       </Stepper>
-      <div>
+      <div className='signUpForm'>
         {activeStep === steps.length ? (
           <div>
             <Typography className={classes.instructions}>All steps completed</Typography>
@@ -325,7 +402,7 @@ function getStepContent(stepIndex) {
               </form>
 
               </div>
-            <div>
+            <div className='btnGroup'>
               <Button
                 disabled={activeStep === 0}
                 onClick={handleBack}
@@ -335,7 +412,7 @@ function getStepContent(stepIndex) {
               </Button>
               <div>
                  {activeStep === steps.length - 1 ? null : 
-                 <Button variant="contained" color="primary" onClick={handleNext}>
+                 <Button variant="contained" color="secondary" onClick={handleNext} disabled={(activeStep===1 && !signUp)}>
                    Next
               </Button>}
               </div>
@@ -346,13 +423,7 @@ function getStepContent(stepIndex) {
       </div>
     </div>
           
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link href="/signIn" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
+
       </div>
       <Box mt={5}>
         <Copyright />

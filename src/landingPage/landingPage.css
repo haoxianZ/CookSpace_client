@@ -12,6 +12,8 @@ html {
 }
 .intro{
     vertical-align: middle;
+    margin: auto;
+    padding: auto;
 }
 .recipes{
     text-align: center;
