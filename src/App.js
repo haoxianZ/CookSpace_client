@@ -20,6 +20,7 @@ import Events from './events'
 import DisplayRecipeOfTheDay from './displayRecipeOfTheDay'
 import CreateEventNoRecipe from './createEventNoRecipe'
 import Review from './review'
+import NotFound from './404/404'
 function App() {
   const [Login,setLogin]=useState(null);
   const [user, setUser]=useState({})
@@ -119,6 +120,7 @@ function App() {
         <Route exact path="/search" component={SearchRecipe} />
 
         <Route exact path="/" component={LandingPage} />
+        <Route component={NotFound} />
 
       </Switch>
     </div>

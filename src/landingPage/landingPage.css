@@ -1,7 +1,8 @@
 .header{
 display: initial;
 flex-direction: row;   
-text-align: center; 
+text-align: center;
+padding: 5px; 
 }
 .link{
     flex-direction: row;

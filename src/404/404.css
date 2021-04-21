@@ -1,0 +1,10 @@
+.pageNotFound a button{
+    background-color: #ee0000;
+    color: whitesmoke;
+    border-radius: 30px;
+    padding-inline: 25px;
+}
+.pageNotFound{
+    text-align: center;
+    margin: 10%;
+}
