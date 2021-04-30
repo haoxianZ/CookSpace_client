@@ -1,9 +1,7 @@
-import React,{useContext, useState,useEffect} from 'react';
+import React,{useContext,useEffect} from 'react';
 import context from './context';
 import config from './config';
-import LoadMore from './loadMore';
 import Header from './header'
-import {Link} from 'react-router-dom'
 
 export default function DisplayRecipeOfTheDay(props){
   const Context = useContext(context);
@@ -40,7 +38,6 @@ const recipe_id= props.match.params.recipe_id;
     let renderIngredients;
     let renderInstructions;
     let ingredients;
-    console.log(recipe)
     let cookingTime
     if(!recipe){
       renderRecipes = null

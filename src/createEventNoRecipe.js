@@ -21,7 +21,6 @@ export default function CreateEventNoRecipe(props){
         const event = await fetch(`${config.SERVER_ENDPOINT}/events/event/${event_id}`);
        
         const jsonRecipe = await event.json();
-        console.log(jsonRecipe,event_id)
         if(jsonRecipe) setEventRecipe(jsonRecipe.event_recipe_id);
 
       }
@@ -38,8 +37,6 @@ export default function CreateEventNoRecipe(props){
             </li>
         )
     })
-    console.log(friendsList)
-    console.log(Context.recipes)
     const event ={
        
            event_date: eventDate

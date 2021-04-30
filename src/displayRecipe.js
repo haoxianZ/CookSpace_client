@@ -1,20 +1,16 @@
-import React,{useContext, useState,useEffect} from 'react';
-import context from './context';
+import React,{ useState,useEffect} from 'react';
 import config from './config';
-import LoadMore from './loadMore';
 import Header from './header'
-import {Link, useHistory} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import VisitorHeader from './visitorHeader/visitorHeader';
 
 export default function DisplayRecipe(props){
   const [eventId,setEventId]= useState('');
   const [recipeReviews,setRecipeReview]= useState([]);
   const [recipe,setRecipe]=useState(null)
-  const Context = useContext(context);
-  const history=useHistory()
+
   const apiKey= process.env.REACT_APP_API_KEY;
   const  user_id  = props.match.params.userid;
-  console.log(user_id)
 const recipe_id= props.match.params.recipe_id;
   useEffect(()=>{
     async function getRecipe(){
@@ -52,14 +48,12 @@ const recipe_id= props.match.params.recipe_id;
         })
       .then(responseJson=>{
         if(user_id&& responseJson){
-          console.log(user_id,responseJson)
           const newEvent = {
             event_recipe_id:responseJson,
             host_id: user_id,
             event_date:"",
             event_name:responseJson.title
           }
-          console.log(newEvent)
           fetch(`${config.SERVER_ENDPOINT}/events`, {
             method: 'POST',
             headers: {
@@ -73,7 +67,6 @@ const recipe_id= props.match.params.recipe_id;
             throw new Error(response.statusText);
           })
           .then(responseJson => {
-            console.log(responseJson)
             setEventId(responseJson.id)})
           .catch(error => {
               console.error({ error })
@@ -92,7 +85,6 @@ const recipe_id= props.match.params.recipe_id;
     let renderIngredients;
     let renderInstructions;
     let ingredients;
-    console.log(recipe)
     let cookingTime
     if(!recipe){
       renderRecipes = null

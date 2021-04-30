@@ -12,7 +12,6 @@ export default function Events(props){
           const savedEvents = await fetch(`${config.SERVER_ENDPOINT}/events/${user_id}`);
           const jsonEvents = await savedEvents.json();
          setEvents(jsonEvents)
-        console.log(jsonEvents)
         }
         fetchData()
       },[])
@@ -21,8 +20,6 @@ export default function Events(props){
         
         displayEvents = events.map((event,index)=>{
             let date = new Date(event.event_date)
-            console.log(date
-                )
         return (<div key={index}>
             <h5>{event.event_name?event.event_name:'No Event Name'}</h5> 
             <h6>{event.event_recipe_id.title?event.event_recipe_id.title:'No Recipe'}</h6>
@@ -53,7 +50,6 @@ export default function Events(props){
         throw new Error(response.statusText);
       })
       .then(responseJson => {
-        console.log(responseJson)
         history.push(`/users/${user_id}/createEvent/${responseJson.id}`)})
       .catch(error => {
           console.error({ error })

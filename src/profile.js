@@ -1,14 +1,12 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, { useState, useEffect} from 'react';
 import {Link, useHistory} from 'react-router-dom'
 import Header from './header';
-import context from './context';
 import config from './config';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
 
@@ -70,9 +68,6 @@ export default function Profile(props){
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
-    console.log(randomRecipe)
-
-    
     const  user_id  = props.match.params.userid;
     const deleteFriend=(e)=>{
       fetch(`${config.SERVER_ENDPOINT}/users/${user_id}/friends/${e.target.value}`, {
@@ -88,7 +83,6 @@ export default function Profile(props){
         .then(() => {
           const newList = friends.filter(friend=>friend.friend_id!==parseInt(e.target.value) )
           setUserFriends(newList)
-          console.log(friends,e.target.value)
           alert('Friend has been deleted')
           })
         .catch(error => {
@@ -129,7 +123,6 @@ export default function Profile(props){
       },[])
       const history = useHistory();
     const deleteBookmark=(e)=>{
-        console.log(e.target.value)
         fetch(`${config.SERVER_ENDPOINT}/users/${user_id}/bookmarks/${e.target.value}`, {
             method: 'DELETE',
             headers: {
@@ -179,7 +172,6 @@ export default function Profile(props){
             return res.json()
           })
           .then(friends => {
-            console.log( friends)
             setUserFriends(friends)
             alert(`friend has been added. `)
           })
@@ -188,7 +180,6 @@ export default function Profile(props){
     const friendsName= friends.map((friend)=>{
       return friend.username
     })
-    console.log(matchingUsers, 'testing')
 
     const dispalyMatchingUsers = matchingUsers.map((user,index)=>{
 

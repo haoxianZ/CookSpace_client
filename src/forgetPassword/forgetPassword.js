@@ -29,7 +29,6 @@ export default function ForgotPassword(){
               return res.json()
             })
             .then(user => {
-              console.log(user)
               history.push(`/users/reset/${user.id}`)
             })
             .catch(error => {

@@ -2,8 +2,6 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 import React, { useState } from 'react'
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import MobileStepper from '@material-ui/core/MobileStepper';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
@@ -11,7 +9,6 @@ import SwipeableViews from 'react-swipeable-views';
 import RecordVoiceOverIcon from '@material-ui/icons/RecordVoiceOver';
 import Tooltip from '@material-ui/core/Tooltip';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
@@ -72,7 +69,6 @@ export default function VoiceControl(props){
   
   const maxSteps = renderInstructions.length;
 
-  console.log(event)
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -84,7 +80,6 @@ export default function VoiceControl(props){
   const handleStepChange = (step) => {
     setActiveStep(step);
   };
-    const [message, setMessage] = useState('')
     const commands = [
       {
         command: 'next',

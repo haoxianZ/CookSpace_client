@@ -1,6 +1,5 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, { useState, useEffect} from 'react';
 import Header from '../header';
-import context from '../context';
 import SearchRecipe from '../searchRecipe/searchRecipe';
 import config from '../config';
 import {Link} from 'react-router-dom'
@@ -9,8 +8,6 @@ export default function UserPage(props){
     const [user, setUser] = useState({})
     const [popularRecipes, setPopularRecipes]= useState([])
     const [randomRecipe, setRandomRecipe]= useState({});
-
-    console.log(randomRecipe)
     const  user_id  = props.match.params.userid;
     useEffect(()=>{
         async function fetchData(){
@@ -24,7 +21,6 @@ export default function UserPage(props){
           setPopularRecipes(jsonRecipes)
           setUser(jsonUser)
           setRandomRecipe(jsonRecipe)
-          console.log(jsonRecipe)
         }
         fetchData()
         

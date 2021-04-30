@@ -4,17 +4,13 @@ import VoiceControl from '../voiceCommand'
 import Header from '../header'
 import config from '../config'
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import RecordVoiceOverIcon from '@material-ui/icons/RecordVoiceOver';
-import Tooltip from '@material-ui/core/Tooltip';
 import './videoCall.css'
-import { useHistory } from 'react-router';
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 400,
@@ -55,7 +51,6 @@ useEffect(()=>{
       const savedEvents = await fetch(`${config.SERVER_ENDPOINT}/events/event/${event_id}`);
       const jsonEvents = await savedEvents.json();
      setEvent(jsonEvents)
-    console.log(jsonEvents)
     }
     fetchData()
     
@@ -67,7 +62,6 @@ useEffect(()=>{
     eventName=event.event_name
     recipe_id=event.event_recipe_id.id
     username=event.username
-    console.log(recipe_id)
   }
 
   
@@ -76,16 +70,16 @@ useEffect(()=>{
       cookingTime=recipe.readyInMinutes
       ingredients = recipe.extendedIngredients;
       if(recipe.instructions){ 
-      const instructions = recipe.analyzedInstructions[0].steps;
-      renderInstructions=  instructions.map((step,index)=>{
-        return(
-          <li key={index}>
-            {step.step}
-          </li>
-        )
+      // const instructions = recipe.analyzedInstructions[0].steps;
+      // renderInstructions=  instructions.map((step,index)=>{
+      //   return(
+      //     <li key={index}>
+      //       {step.step}
+      //     </li>
+      //   )
         
 
-      });
+      // });
       renderIngredients=ingredients.map((ingredient,index)=>{
         return(
           <li key={index}>
@@ -95,7 +89,6 @@ useEffect(()=>{
         
 
       })}}
-  const history = useHistory()
   return (
     <div className="videoCall">
       <Header home={`/users/${user_id}`} profile={`/users/${user_id}/profile`} events={`/users/${user_id}/events`} list={`/users/${user_id}/list`} />

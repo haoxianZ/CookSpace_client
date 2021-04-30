@@ -7,11 +7,9 @@ import ReactCodeInput from 'react-verification-code-input';
 export default function VerifyResetPassword(props){
     const history = useHistory();
     const  user_id  = props.match.params.userid;
-    console.log(user_id)
     const resetCode = e=>{
         e.preventDefault();
         const code={code: e.target['resetCode'].value};
-        console.log(code.code)
         fetch(`${config.SERVER_ENDPOINT}/users/reset-password?user_id=${user_id}&code=${code.code}`, {
             method: 'GET',
             headers: {
@@ -28,7 +26,6 @@ export default function VerifyResetPassword(props){
               return res.json()
             })
             .then(user => {
-              console.log(user)
               history.push(`/users/reset/${user.id}/password`)
             })
             .catch(error => {
@@ -37,10 +34,7 @@ export default function VerifyResetPassword(props){
             })
 
     };
-    const handleComplete = vals=>{
-      console.log(vals)
-      const code={code: vals};
-      
+    const handleComplete = vals=>{      
       fetch(`${config.SERVER_ENDPOINT}/users/reset-password?user_id=${user_id}&code=${vals}`, {
           method: 'GET',
           headers: {
@@ -50,7 +44,6 @@ export default function VerifyResetPassword(props){
         })
           .then(res => {
             if (!res.ok){
-              console.log(res)
               res.json().then(e=>alert(e.error.message))
               return res.json().then(e => Promise.reject(e))
             }
@@ -58,7 +51,6 @@ export default function VerifyResetPassword(props){
             return res.json()
           })
           .then(user => {
-            console.log(user)
             history.push(`/users/reset/${user.id}/password`)
           })
           .catch(error => {

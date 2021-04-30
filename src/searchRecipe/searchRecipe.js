@@ -9,15 +9,12 @@ import Input from '@material-ui/core/Input';
 import AccessTime from '@material-ui/icons/AccessTime';
 import config from '../config';
 import context from '../context';
-import {useHistory, Link} from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import './searchRecipe.css';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import TuneIcon from '@material-ui/icons/Tune';
 import Switch from '@material-ui/core/Switch';
@@ -92,7 +89,6 @@ export default function SearchRecipe(props){
   })(Slider);
 
     const Context = useContext(context);
-    const history = useHistory();
     const classes = useStyles();
     const [status, setStatus]= useState(false)
     const [cookTime, setCookTime] = useState(10000);
@@ -105,7 +101,6 @@ export default function SearchRecipe(props){
     const [popular, setPopular]= useState(true)
 
     const  user_id  = props.user_id;
-    console.log(user_id)
     const [anchorEl, setAnchorEl] = useState(null);
     const [recipeReviews, setRecipeReview] = useState([]);
 
@@ -152,11 +147,7 @@ export default function SearchRecipe(props){
         if(popular) sort="popularity"
         if(healthy) sort+=",healthiness"
         
-        console.log(Context.spoonApi)
-        fetch(`${config.API_ENDPOINT}recipes/complexSearch?query=${searchWord}
-        &veryHealthy=${healthy}&includeIngredients=${includeIngredients}&instructionsRequired=true&sort=${sort}&sortDirection=asc
-        &maxReadyTime=${cookTime}&excludeIngredients=${excludeIngredients}&diet=${diet}&intolerances=${intolerance}
-        &number=25&apiKey=${Context.spoonApi}`, {
+        fetch(`${config.API_ENDPOINT}recipes/complexSearch?query=${searchWord}&veryHealthy=${healthy}&includeIngredients=${includeIngredients}&instructionsRequired=true&sort=${sort}&sortDirection=asc&maxReadyTime=${cookTime}&excludeIngredients=${excludeIngredients}&diet=${diet}&intolerances=${intolerance}&number=25&apiKey=${Context.spoonApi}`, {
             method: 'GET',
             headers: {
               'content-type': 'application/json'
@@ -167,7 +158,6 @@ export default function SearchRecipe(props){
               return res.json()
             })
             .then(recipes => {
-              console.log(recipes.results)
               if(recipes.results.length===0) alert('Ooops! That returned no result')
               Context.addRecipe(recipes.results)
               })
@@ -197,7 +187,6 @@ export default function SearchRecipe(props){
     }
     const results=Context.recipes;
     const api_id=recipeReviews.map(review=>review.api_id)
-    console.log(api_id)
     const resultsReview= results.map(result=>{
       let recipeId;
       let comment;
@@ -205,7 +194,6 @@ export default function SearchRecipe(props){
       let ratingNum=0;
       let commentedUser;
       if(recipeReviews[api_id.indexOf(`${result.id}`)]){
-        console.log(recipeReviews)
          recipeId=recipeReviews[api_id.indexOf(`${result.id}`)].api_id;
          comment=recipeReviews[api_id.indexOf(`${result.id}`)].comment;
          recipeReviews.map(review=>{
@@ -230,14 +218,12 @@ export default function SearchRecipe(props){
         }
     })
     
-    console.log(results,'this is the result, need to add review to them',resultsReview)
     let display;
     if(!results){
       display = null
         
     }
      else display = resultsReview.map((recipe,key)=>{
-       console.log(recipe.rating)
             return (<div className='subContainer' key={key}>
            <Link to={user_id?`/users/${user_id}/${recipe.id}`:`./recipe/${recipe.id}`} >
              <h3>{recipe.title}</h3>
@@ -265,7 +251,6 @@ export default function SearchRecipe(props){
     window.onscroll = function() {scrollFunction()};
     
     const  scrollFunction=()=> {
-      console.log('scrolling running')
       if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
         mybutton.style.display = "block";
       } else {

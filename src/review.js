@@ -16,14 +16,12 @@ export default function Review(props){
         const savedEvents = await fetch(`${config.SERVER_ENDPOINT}/events/event/${event_id}`);
         const jsonEvents = await savedEvents.json();
        setEvent(jsonEvents.event_recipe_id)
-      console.log(jsonEvents)
       }
       fetchData()
       
     },[])
     const handleReview=(e)=>{
         e.preventDefault();
-        console.log(e.target['comment'].value)
         const review = {
             api_id: recipe.id,
             comment:e.target['comment'].value,

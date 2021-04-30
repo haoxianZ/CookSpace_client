@@ -1,18 +1,10 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
-import Navbar from 'react-bootstrap/Navbar'
-import Nav from 'react-bootstrap/Nav'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Container from 'react-bootstrap/Container'
-
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuIcon from '@material-ui/icons/Menu';
-import SearchRecipe from './searchRecipe/searchRecipe';
 export default function Header(props) {
-    console.log(props.profile, props.events)
     const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {

@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import {Route, Switch} from 'react-router-dom'
-import {Jutsu} from 'react-jutsu'
 import VideoCall from './videoCall/videoCall'
 import LandingPage from './landingPage/landingPage'
 import SignInSide from './signIn/signIn'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SignUp from './signUp/signUp'
 import ShoppingList from './shoppingList/shoppingList'
-import MyTimer from './timer'
 import VoiceControl from './voiceCommand'
 import config from './config';
 import context from './context';
@@ -40,13 +38,12 @@ function App() {
      useEffect(()=>{
     async function fetchData(){
       const recipe = await fetch(`${config.SERVER_ENDPOINT}/recipes/recipeOfTheDay`);
-      const spoonAPI=await fetch(`${config.SERVER_ENDPOINT}/recipes/api`);
+      // const spoonAPI=await fetch(`${config.SERVER_ENDPOINT}/recipes/api`);
       const jsonRecipe = await recipe.json();
-      const spoonApi = await spoonAPI.json();
+      const spoonApi = process.env.REACT_APP_API_KEY;
 
      setRandomRecipe(jsonRecipe);
-     setSpoonApi(spoonApi.spoonApi)
-    console.log(randomRecipe, jsonRecipe)
+     setSpoonApi(spoonApi)
     }
     fetchData()
     
@@ -72,7 +69,6 @@ function App() {
     )
   }
 
-  console.log(ingredients)
   const loginUser=(user)=>{
       setUser(user)
       setLogin(user)

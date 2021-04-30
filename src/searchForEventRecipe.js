@@ -20,7 +20,6 @@ const useStyles = makeStyles({
 export default function SearchForEventRecipe(props){
     const Context = useContext(context);
     const event_id=props.event_id;
-    console.log(props)
     const user_id= props.user_id
     const history = useHistory();
     const classes = useStyles();
@@ -45,7 +44,6 @@ export default function SearchForEventRecipe(props){
     };
     const addRecipeEvent=(e)=>{
       e.preventDefault();
-      console.log(eventRecipe)
       const eventDetail={
         event_recipe_id:eventRecipe
       }
@@ -73,8 +71,6 @@ export default function SearchForEventRecipe(props){
         const includeIngredients= document.getElementById("includeIngredient").value;
         const excludeIngredients = document.getElementById("excludeIngredient").value;
         const cuisine = document.getElementById("cuisine").value;
-
-        console.log(Context.spoonApi)
         fetch(`${config.API_ENDPOINT}recipes/complexSearch?query=${searchWord}&includeIngredients=${includeIngredients}&maxReadyTime=${cookTime}&excludeIngredients=${excludeIngredients}&cuisine=${cuisine}&apiKey=${Context.spoonApi}`, {
             method: 'GET',
             headers: {
@@ -94,7 +90,6 @@ export default function SearchForEventRecipe(props){
 
     }
     const showRecipeDetail=(recipe)=>{
-      console.log(recipe.id)
       fetch(`${config.API_ENDPOINT}recipes/${recipe.id}/information?includeNutrition=false&apiKey=${apiKey}`, {
         method: 'GET',
         headers: {
@@ -112,7 +107,6 @@ export default function SearchForEventRecipe(props){
       let renderIngredients;
     let renderInstructions;
     let ingredients=eventRecipe.extendedIngredients;
-    console.log(eventRecipe)
     let cookingTime=eventRecipe.readyInMinutes
       if(eventRecipe.analyzedInstructions){ 
       const instructions = eventRecipe.analyzedInstructions[0].steps;
@@ -146,7 +140,6 @@ export default function SearchForEventRecipe(props){
       })
     }
     const results=Context.recipes;
-    console.log(results)
     let display;
 
     if(!results){
@@ -210,7 +203,6 @@ export default function SearchForEventRecipe(props){
     window.onscroll = function() {scrollFunction()};
     
     const  scrollFunction=()=> {
-      console.log('scrolling running')
       if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
         mybutton.style.display = "block";
       } else {

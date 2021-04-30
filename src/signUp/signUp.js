@@ -2,13 +2,9 @@ import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -80,11 +76,10 @@ export default function SignUp(props) {
   const [activeStep, setActiveStep] = useState(0);
   const [signUp, setSignUp] = useState(false);
   const [user_id, setUser_id] = useState(null);
-
   const steps = getSteps();
   const [name, setName]=useState('');
   const [email, setEmail]=useState('');
-  const [confirmEmail, setConfirmEmail]=useState('');
+  // const [confirmEmail, setConfirmEmail]=useState('');
   const [password, setPassword]=useState('');
   const [confirmPassword, setConfirmPassword]=useState('');
   const [bio, setBio]=useState('');
@@ -101,16 +96,12 @@ export default function SignUp(props) {
   const handleEmail = (e)=>{
     setEmail(e.target.value)
   }
-    
-
-  const handleConfirmEmail = (e)=>{
-    setConfirmEmail(e.target.value)
-  }
+  // const handleConfirmEmail = (e)=>{
+  //   setConfirmEmail(e.target.value)
+  // }
     
 
   const handlePassword = (e)=>{
-    console.log('password', e.target.value)
-
     setPassword(e.target.value)
   }
   const handleConfirmPassword = (e)=>{
@@ -130,7 +121,6 @@ export default function SignUp(props) {
   }
   const handleVerify=(e)=>{
     e.preventDefault()
-    console.log(verification, user_id)
      fetch(`${config.SERVER_ENDPOINT}/users/verify?user_id=${user_id}&code=${verification}`, {
           method: 'Get',
           headers: {
@@ -322,7 +312,6 @@ function getStepContent(stepIndex) {
   };
   const handleSignUp=(e)=>{
     e.preventDefault()
-    console.log(password,confirmPassword)
         const newUser = {
           username: name,
          email: email,

@@ -2,11 +2,9 @@ import React, { useContext, useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import context from '../context';
 import config from '../config';
-import {useHistory} from 'react-router-dom';
 import Header from '../header'
 import './shoppingList.css';
 export default function ShoppingList(props){
-    const history = useHistory();
     const Context = useContext(context);
     const  user_id  = props.match.params.userid;
     const [ingredients, setIngredients]= useState([])
@@ -15,7 +13,6 @@ export default function ShoppingList(props){
         const savedIngredients = await fetch(`${config.SERVER_ENDPOINT}/users/${user_id}/ingredients`);
         const jsonIngredients = await savedIngredients.json();
        setIngredients(jsonIngredients)
-      console.log(jsonIngredients)
       }
       fetchData()
       

@@ -20,11 +20,8 @@ export default function CreateEvent(props){
     const  user_id  = props.match.params.userid;
     const recipe_id= props.match.params.recipe_id;
     const event_id=props.match.params.eventId;
-    console.log(user_id,recipe_id)
-    console.log(user_id,recipe_id)
     const friendsList = Context.friends;
     const handleChange=(e)=>{
-      console.log(e.target.value)
       setEventName(e.target.value)
     }
     const displayFriends = friendsList.map((friend,key)=>{
@@ -36,15 +33,13 @@ export default function CreateEvent(props){
             </li>
         )
     })
-    console.log(friendsList)
-    console.log(Context.recipes)
     const event ={
           event_name:eventName ,
            event_date: eventDate
     }
     const handleSave=(e)=>{
         fetch(`${config.SERVER_ENDPOINT}/events/event/${event_id}`, {
-            method: 'PATCH',
+            method: 'put',
             headers: {
               'content-type': 'application/json'
             },

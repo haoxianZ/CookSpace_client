@@ -1,26 +1,18 @@
 import React, {useContext, useState} from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Avatar from '@material-ui/core/Avatar';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-import PersonIcon from '@material-ui/icons/Person';
 import AddIcon from '@material-ui/icons/Add';
 import Typography from '@material-ui/core/Typography';
-import { blue } from '@material-ui/core/colors';
+// import { blue } from '@material-ui/core/colors';
 import SearchForEventRecipe from './searchForEventRecipe';
 import context from'./context';
-const useStyles = makeStyles({
-  avatar: {
-    backgroundColor: blue[100],
-    color: blue[600],
-  },
-});
+// const useStyles = makeStyles({
+//   avatar: {
+//     backgroundColor: blue[100],
+//     color: blue[600],
+//   },
+// });
 
 
 export default function SelectRecipeForEvent(props) {
@@ -29,20 +21,19 @@ export default function SelectRecipeForEvent(props) {
   const [selectedValue, setSelectedValue] =useState(Context.eventRecipe);
 
 function SimpleDialog(props) {
-  const classes = useStyles();
+  // const classes = useStyles();
   const { onClose, selectedValue, open,event_id } = props;
 
   const handleClose = () => {
     onClose(selectedValue);
   };
 
-  const handleListItemClick = (value) => {
-    onClose(value);
-  };
-  const handleSelect=(value)=>{
-    setSelectedValue(value)
-  }
-  console.log(props)
+  // const handleListItemClick = (value) => {
+  //   onClose(value);
+  // };
+  // const handleSelect=(value)=>{
+  //   setSelectedValue(value)
+  // }
   return (
     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} fullWidth>
         <SearchForEventRecipe event_id={props.event_id} selectedValue={props.selected} user_id={props.user_id} setEventRecipe={props.setEventRecipe}
