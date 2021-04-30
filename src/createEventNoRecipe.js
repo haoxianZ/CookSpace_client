@@ -64,11 +64,15 @@ export default function CreateEventNoRecipe(props){
               return event
             })
     }
+    const handleSetEventRecipe=(recipe)=>{
+      setEventRecipe(recipe)
+
+    }
     return(
         <div className="createEvent">
           <Header home={`/users/${user_id}`} profile={`/users/${user_id}/profile`} events={`/users/${user_id}/events`} list={`/users/${user_id}/list`} />
             
-            <SelectRecipeForEvent event_id={event_id} selected={eventRecipe}/>
+            <SelectRecipeForEvent event_id={event_id} selected={eventRecipe} user_id={user_id} setEventRecipe={handleSetEventRecipe}/>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <br/>
       <DateTimePicker

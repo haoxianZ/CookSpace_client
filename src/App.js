@@ -30,6 +30,7 @@ function App() {
   const [recipes, setRecipes]=useState([])
   const [friends, setUserFriends]=useState([])
   const [recipe, setRecipe]=useState(null);
+  const [eventRecipe, setEventRecipe]=useState(null)
 
   const [ingredients, setIngredients]=useState([]);
   const time = new Date();
@@ -59,6 +60,10 @@ function App() {
       ]
     )
   }
+  const handleSetEventRecipe=(recipe)=>{
+    setEventRecipe(recipe)
+
+  }
   const handleDeleteIngredient=(id)=>{
     id = parseInt(id);
    const newArray = ingredients.filter(ingredient=>ingredient.ingredient_id!==id)
@@ -66,6 +71,7 @@ function App() {
       newArray
     )
   }
+
   console.log(ingredients)
   const loginUser=(user)=>{
       setUser(user)
@@ -87,13 +93,15 @@ function App() {
     friends,
     ingredients,
     recipes,
+    eventRecipe,
     handleRecipe,
     handleAddIngredient,
     handleDeleteIngredient,
     loginUser,
     loginUserFriends,
     spoonApi,
-    addRecipe
+    addRecipe,
+    handleSetEventRecipe
   }
   return (
     <context.Provider value={contextValue}>

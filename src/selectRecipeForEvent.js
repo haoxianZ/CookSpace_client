@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -14,7 +14,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Typography from '@material-ui/core/Typography';
 import { blue } from '@material-ui/core/colors';
 import SearchForEventRecipe from './searchForEventRecipe';
-
+import context from'./context';
 const useStyles = makeStyles({
   avatar: {
     backgroundColor: blue[100],
@@ -24,9 +24,9 @@ const useStyles = makeStyles({
 
 
 export default function SelectRecipeForEvent(props) {
-
+  const Context =useContext(context);
   const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] =useState(null);
+  const [selectedValue, setSelectedValue] =useState(Context.eventRecipe);
 
 function SimpleDialog(props) {
   const classes = useStyles();
@@ -45,7 +45,7 @@ function SimpleDialog(props) {
   console.log(props)
   return (
     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} fullWidth>
-        <SearchForEventRecipe event_id={props.event_id} selectedValue={props.selected}
+        <SearchForEventRecipe event_id={props.event_id} selectedValue={props.selected} user_id={props.user_id} setEventRecipe={props.setEventRecipe}
        />
       {/* <DialogTitle id="simple-dialog-title">Set backup account</DialogTitle>
       <List>
@@ -73,11 +73,6 @@ function SimpleDialog(props) {
   );
 }
 
-SimpleDialog.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
-  selectedValue: PropTypes.string.isRequired,
-};
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -90,7 +85,7 @@ SimpleDialog.propTypes = {
   return (
     <div>
       <Typography variant="subtitle1">Selected Recipe: 
-      {props.selected?props.selected.title:null}</Typography>
+      {Context.eventRecipe?Context.eventRecipe.title:null}</Typography>
       <br />
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
         <AddIcon/>

@@ -10,6 +10,7 @@ const context= React.createContext({
   ingredients:[],
   randomRecipe:{},
   spoonApi:'',
+  eventRecipe:null,
   handleAddIngredient:()=>{},
   handleDeleteIngredient:()=>{},
   addUser: () => {},
@@ -18,7 +19,8 @@ const context= React.createContext({
   showRecipe:()=>{},
   loginUser:()=>{},
   loginUserFriends:()=>{},
-  handleRecipe:()=>{}
+  handleRecipe:()=>{},
+  handleSetEventRecipe:()=>{}
 })
 export const contextProvider = context.Provider;
 export default context;

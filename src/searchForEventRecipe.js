@@ -21,13 +21,13 @@ export default function SearchForEventRecipe(props){
     const Context = useContext(context);
     const event_id=props.event_id;
     console.log(props)
-
+    const user_id= props.user_id
     const history = useHistory();
     const classes = useStyles();
     const [cookTime, setCookTime] = useState(30);
     const apiKey= process.env.REACT_APP_API_KEY;
+    let eventRecipe;
     const [renderRecipe,setRenderRecipe]=useState(<div>test</div>)
-    const[eventRecipe,setRecipe]=useState({})
     const handleSliderChange = (event, newValue) => {
       setCookTime(newValue);
     };
@@ -60,6 +60,8 @@ export default function SearchForEventRecipe(props){
         return res.json()
       }).then(recipe=>{
         alert('You have selected a recipe!')
+        Context.handleSetEventRecipe(eventRecipe)
+        history.push(`/users/${user_id}/createEvent/${event_id}`)
 
       }
 
@@ -106,15 +108,14 @@ export default function SearchForEventRecipe(props){
       throw new Error(response.statusText);
     })
     .then(responseJson => {
-      const recipe=responseJson;
-      setRecipe(recipe)
+      eventRecipe=responseJson;
       let renderIngredients;
     let renderInstructions;
-    let ingredients=recipe.extendedIngredients;
-    console.log(recipe)
-    let cookingTime=recipe.readyInMinutes
-      if(recipe.analyzedInstructions){ 
-      const instructions = recipe.analyzedInstructions[0].steps;
+    let ingredients=eventRecipe.extendedIngredients;
+    console.log(eventRecipe)
+    let cookingTime=eventRecipe.readyInMinutes
+      if(eventRecipe.analyzedInstructions){ 
+      const instructions = eventRecipe.analyzedInstructions[0].steps;
       renderInstructions=  instructions.map((step,index)=>{
         return(
           <li key={index}>
