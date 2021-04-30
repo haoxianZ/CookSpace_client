@@ -21,6 +21,9 @@ import DisplayRecipeOfTheDay from './displayRecipeOfTheDay'
 import CreateEventNoRecipe from './createEventNoRecipe'
 import Review from './review'
 import NotFound from './404/404'
+import ForgotPassword from './forgetPassword/forgetPassword'
+import VerifyResetPassword from './verifyResetPassword'
+import ResetPassword from './resetPassword'
 function App() {
   const [Login,setLogin]=useState(null);
   const [user, setUser]=useState({})
@@ -99,12 +102,16 @@ function App() {
       <Switch>
         <Route exact path="/signIn" component={SignInSide} />
         <Route exact path="/signUp" component={SignUp} />
+        <Route exact path="/forgetPassword" component={ForgotPassword} />
+        <Route exact path="/users/reset/:userid/password" component={ResetPassword} />
+        <Route exact path="/users/reset/:userid" component={VerifyResetPassword} />
+
         <Route exact path="/users/:userid/list" component={ShoppingList} />
        
         <Route exact path="/users/:userid" component={UserPage} />
         <Route exact path="/users/:userid/videoCall/:event_id" component={VideoCall} />
         <Route exact path="/users/:userid/review/:event_id/" component={Review} />
-
+        
         <Route exact path="/users/:userid/events" component={Events} />
         <Route exact path="/users/:userid/profile" component={Profile} />
         <Route exact path="/users/:userid/list" component={ShoppingList} />

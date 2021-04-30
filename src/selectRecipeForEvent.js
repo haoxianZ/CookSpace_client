@@ -15,7 +15,6 @@ import Typography from '@material-ui/core/Typography';
 import { blue } from '@material-ui/core/colors';
 import SearchForEventRecipe from './searchForEventRecipe';
 
-const emails = ['username@gmail.com', 'user02@gmail.com'];
 const useStyles = makeStyles({
   avatar: {
     backgroundColor: blue[100],
@@ -23,9 +22,15 @@ const useStyles = makeStyles({
   },
 });
 
+
+export default function SelectRecipeForEvent(props) {
+
+  const [open, setOpen] = useState(false);
+  const [selectedValue, setSelectedValue] =useState(null);
+
 function SimpleDialog(props) {
   const classes = useStyles();
-  const { onClose, selectedValue, open } = props;
+  const { onClose, selectedValue, open,event_id } = props;
 
   const handleClose = () => {
     onClose(selectedValue);
@@ -34,10 +39,14 @@ function SimpleDialog(props) {
   const handleListItemClick = (value) => {
     onClose(value);
   };
-
+  const handleSelect=(value)=>{
+    setSelectedValue(value)
+  }
+  console.log(props)
   return (
     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} fullWidth>
-        <SearchForEventRecipe/>
+        <SearchForEventRecipe event_id={props.event_id} selectedValue={props.selected}
+       />
       {/* <DialogTitle id="simple-dialog-title">Set backup account</DialogTitle>
       <List>
         {emails.map((email) => (
@@ -69,11 +78,6 @@ SimpleDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   selectedValue: PropTypes.string.isRequired,
 };
-
-export default function SelectRecipeForEvent() {
-  const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = React.useState(emails[1]);
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -85,13 +89,14 @@ export default function SelectRecipeForEvent() {
 
   return (
     <div>
-      <Typography variant="subtitle1">Selected: {selectedValue}</Typography>
+      <Typography variant="subtitle1">Selected Recipe: 
+      {props.selected?props.selected.title:null}</Typography>
       <br />
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
         <AddIcon/>
         Search and Add a Recipe
       </Button>
-      <SimpleDialog selectedValue={selectedValue} open={open} onClose={handleClose} />
+      <SimpleDialog selectedValue={selectedValue} open={open} onClose={handleClose} event_id={props.event_id} />
     </div>
   );
 }

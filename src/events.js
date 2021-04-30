@@ -24,8 +24,8 @@ export default function Events(props){
             console.log(date
                 )
         return (<div key={index}>
-            <h5>{event.event_name}</h5> 
-            <h6>{event.event_recipe_id.title}</h6>
+            <h5>{event.event_name?event.event_name:'No Event Name'}</h5> 
+            <h6>{event.event_recipe_id.title?event.event_recipe_id.title:'No Recipe'}</h6>
             <p>Time: {date.toLocaleString()}</p>
             <Link to={`/users/${user_id}/videoCall/${event.id}`}  >
                 <button>Start Event</button>
@@ -37,7 +37,7 @@ export default function Events(props){
     const newEvent = {
         event_recipe_id:{},
         host_id: user_id,
-        event_date:"",
+        event_date:new Date(),
         event_name:''
       }
     const createNewEvent = ()=>{fetch(`${config.SERVER_ENDPOINT}/events`, {

@@ -19,12 +19,15 @@ const useStyles = makeStyles({
   
 export default function SearchForEventRecipe(props){
     const Context = useContext(context);
+    const event_id=props.event_id;
+    console.log(props)
+
     const history = useHistory();
     const classes = useStyles();
     const [cookTime, setCookTime] = useState(30);
     const apiKey= process.env.REACT_APP_API_KEY;
     const [renderRecipe,setRenderRecipe]=useState(<div>test</div>)
-
+    const[eventRecipe,setRecipe]=useState({})
     const handleSliderChange = (event, newValue) => {
       setCookTime(newValue);
     };
@@ -40,6 +43,28 @@ export default function SearchForEventRecipe(props){
         setCookTime(180);
       }
     };
+    const addRecipeEvent=(e)=>{
+      e.preventDefault();
+      console.log(eventRecipe)
+      const eventDetail={
+        event_recipe_id:eventRecipe
+      }
+      fetch(`${config.SERVER_ENDPOINT}/events/event/${event_id}`,{
+        method:'put',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body:JSON.stringify(eventDetail)
+      }).then(res => {
+        if (!res.ok) return res.json().then(e => Promise.reject(e))
+        return res.json()
+      }).then(recipe=>{
+        alert('You have selected a recipe!')
+
+      }
+
+      )
+    }
     const handleSubmit=(e)=>{
         e.preventDefault();
         const searchWord = document.getElementById("keyWord").value;
@@ -82,6 +107,7 @@ export default function SearchForEventRecipe(props){
     })
     .then(responseJson => {
       const recipe=responseJson;
+      setRecipe(recipe)
       let renderIngredients;
     let renderInstructions;
     let ingredients=recipe.extendedIngredients;
@@ -107,14 +133,14 @@ export default function SearchForEventRecipe(props){
         
 
       })}
-      setRenderRecipe(<div>
-        <button>Add Recipe to Event</button>
+      setRenderRecipe(<form >
+        <button type='submit' onClick={addRecipeEvent}>Add Recipe to Event</button>
         <h5>Cooking Time: {cookingTime}</h5>
         <h6>Ingredients:</h6><br/>
         {renderIngredients}
         <h6>Instruction:</h6><br/>
         {renderInstructions}
-      </div>)
+      </form>)
       return responseJson
       })
     }
