@@ -12,7 +12,7 @@ export default function ForgotPassword(){
         const email={email: e.target['email'].value};
         
         fetch(`${config.SERVER_ENDPOINT}/users/forget-password`, {
-            method: 'PATCH',
+            method: 'put',
             headers: {
               'content-type': 'application/json',
 
