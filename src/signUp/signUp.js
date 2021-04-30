@@ -355,7 +355,7 @@ function getStepContent(stepIndex) {
             // alert('You have signed up!')
             })
           .catch(error => {
-            console.error({ error })
+            alert(error.error.message)
           })
         }
         
